@@ -1,0 +1,28 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Allow authenticated users to read/write their own data
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Public read, authenticated write for shared data
+    match /public/{document=**} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+
+    // Admin-only collections
+    match /admin/{document=**} {
+      allow read, write: if request.auth != null 
+        && request.auth.token.admin == true;
+    }
+
+    // API keys collection — owner only
+    match /apiKeys/{keyId} {
+      allow read, write: if request.auth != null 
+        && resource.data.ownerId == request.auth.uid;
+    }
+  }
+}
