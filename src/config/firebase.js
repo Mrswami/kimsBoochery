@@ -13,9 +13,9 @@ import { getAnalytics } from 'firebase/analytics'
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY || 'YOUR_API_KEY',
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || 'kimboocherly.firebaseapp.com',
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || 'kimboocherly',
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || 'kimboocherly.firebasestorage.app',
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || 'kimboocherly-app.firebaseapp.com',
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || 'kimboocherly-app',
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || 'kimboocherly-app.firebasestorage.app',
   messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || 'YOUR_SENDER_ID',
   appId: import.meta.env.VITE_FIREBASE_APP_ID || 'YOUR_APP_ID',
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || 'YOUR_MEASUREMENT_ID'

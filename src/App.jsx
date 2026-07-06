@@ -65,12 +65,31 @@ function App() {
     { text: '<strong>Hosting</strong> — Production deployment v1.0.0 live', time: '1 hr ago', color: 'var(--accent-emerald)' },
   ]
 
+  // Armadillo attitude quotes
+  const armadilloQuotes = [
+    "Don't touch my fermentation tanks or you'll get the boot.",
+    "Sad Cactus flavor is brewed with tears, pride, and zero sugar.",
+    "This is Texas. Emo is a lifestyle, butch is an attitude, kombucha is the cure.",
+    "Mess with the armadillo, you get the spikes. Back off my barrel.",
+    "I put black eyeliner on my shell just to look at your broken configurations."
+  ]
+  const [currentQuote, setCurrentQuote] = useState(armadilloQuotes[0])
+
+  const rotateQuote = () => {
+    const nextIdx = (armadilloQuotes.indexOf(currentQuote) + 1) % armadilloQuotes.length
+    setCurrentQuote(armadilloQuotes[nextIdx])
+  }
+
   return (
     <div className="app-shell">
       {/* ── Header ──────────────────────────────────── */}
       <header className="titlebar">
-        <div className="titlebar-logo">
-          <div className="logo-icon">KB</div>
+        <div className="titlebar-logo" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <img 
+            src="/logo.png" 
+            alt="KimBoocherly Logo" 
+            style={{ width: '40px', height: '40px', borderRadius: '8px', border: '1px solid var(--accent-cyan)' }} 
+          />
           <span className="logo-text">KIMBOOCHERLY</span>
         </div>
 
@@ -101,6 +120,31 @@ function App() {
 
       {/* ── Main Content ────────────────────────────── */}
       <main className="main-content">
+
+        {/* Emo Butch Comic Panel */}
+        <div className="card animate-fade" style={{ marginBottom: '1.5rem', background: 'linear-gradient(135deg, rgba(88, 28, 36, 0.4) 0%, rgba(6, 182, 212, 0.1) 100%)', border: '1px solid var(--accent-cyan)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap' }}>
+            <div style={{ position: 'relative' }}>
+              <img 
+                src="/logo.png" 
+                alt="Armadillo Mascot" 
+                style={{ width: '90px', height: '90px', borderRadius: '50%', border: '3px solid var(--accent-cyan)', boxShadow: '0 0 15px var(--accent-cyan)' }}
+              />
+              <span style={{ position: 'absolute', bottom: '-5px', right: '-5px', background: '#000', border: '1px solid var(--accent-cyan)', borderRadius: '4px', padding: '1px 6px', fontSize: '10px', color: 'var(--accent-cyan)', fontWeight: 'bold' }}>TEXAS BUTCH</span>
+            </div>
+            <div style={{ flex: '1', minWidth: '250px' }}>
+              <div style={{ position: 'relative', background: '#09090b', border: '1px solid var(--border)', borderRadius: '12px', padding: '1rem', color: '#fff', fontSize: '0.9rem', marginBottom: '0.5rem' }}>
+                <div style={{ position: 'absolute', left: '-10px', top: '50%', transform: 'translateY(-50%) rotate(45deg)', width: '16px', height: '16px', background: '#09090b', borderLeft: '1px solid var(--border)', borderBottom: '1px solid var(--border)' }}></div>
+                <p style={{ position: 'relative', zIndex: '1', fontStyle: 'italic', color: 'var(--accent-cyan)', fontWeight: 'bold' }}>
+                  " {currentQuote} "
+                </p>
+              </div>
+              <button className="btn btn-sm btn-primary" onClick={rotateQuote}>
+                <i className="fa-solid fa-sync" /> Pester Armadillo
+              </button>
+            </div>
+          </div>
+        </div>
 
         {/* Dashboard View */}
         {currentView === 'dashboard' && (
@@ -205,7 +249,7 @@ function App() {
             <div className="firebase-panel">
               <div className="firebase-header">
                 <i className="fa-solid fa-fire" />
-                <h3>Firebase Services — kimboocherly</h3>
+                <h3>Firebase Services — kimboocherly-app</h3>
                 <div className="status-indicator" style={{ marginLeft: 'auto' }}>
                   <div className="status-dot" />
                   Connected
@@ -251,6 +295,18 @@ function App() {
         )}
 
       </main>
+
+      {/* ── Footer / Code Link ──────────────────────── */}
+      <footer style={{ borderTop: '1px solid var(--border)', padding: '1rem', textAlign: 'center', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+        <a 
+          href="file:///c:/Users/freem/Documents/KimBoocherly/src/App.jsx" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          style={{ color: 'var(--accent-cyan)', textDecoration: 'none', fontWeight: 'bold' }}
+        >
+          <i className="fa-solid fa-code" style={{ marginRight: '5px' }} /> View App Source Code
+        </a>
+      </footer>
     </div>
   )
 }
