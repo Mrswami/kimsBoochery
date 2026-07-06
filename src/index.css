@@ -278,3 +278,37 @@ body {
   .metric-row { grid-template-columns: 1fr; }
   .main-content { padding: 1rem; }
 }
+
+/* ── Sticky Hands Mode Scaling Overrides ─────────────────── */
+.sticky-active {
+  --radius-md: 1.25rem;
+  --radius-lg: 1.5rem;
+  --radius-xl: 2rem;
+}
+.sticky-active body {
+  font-size: 1.2rem;
+  line-height: 1.8;
+}
+.sticky-active .card {
+  padding: 2.25rem;
+  margin-bottom: 2rem;
+}
+.sticky-active .btn {
+  padding: 1.2rem 2.2rem;
+  font-size: 1.1rem;
+  letter-spacing: 0.02em;
+}
+.sticky-active .titlebar {
+  padding: 1.2rem 2rem;
+}
+.sticky-active .logo-text {
+  font-size: 1.3rem;
+}
+.sticky-active p {
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+.sticky-active h4 {
+  font-size: 1.6rem !important;
+}
+
