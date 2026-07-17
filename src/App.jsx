@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
+import ApiService from './config/api'
 import './index.css'
 
 // ══════════════════════════════════════════════════════════════
@@ -16,6 +17,11 @@ function App() {
   // Cart & Order State
   const [cart, setCart] = useState({})
   const [orderStatus, setOrderStatus] = useState(null) // null | 'ordered' | 'brewing' | 'pickup'
+  const [isPaying, setIsPaying] = useState(false)
+
+  // Mascot Chat State
+  const [chatText, setChatText] = useState('')
+  const [isAskingAI, setIsAskingAI] = useState(false)
 
   // Live clock
   useEffect(() => {
@@ -74,9 +80,25 @@ function App() {
 
   const clearCart = () => setCart({})
 
-  const placeOrder = () => {
+  const placeOrder = async () => {
     if (Object.keys(cart).length === 0) return
-    setOrderStatus('ordered')
+    setIsPaying(true)
+    try {
+      // Simulate payment processing at Sunday Market
+      const totalAmount = Object.entries(cart).reduce((sum, [id, qty]) => {
+        const item = flavors.find(f => f.id === id)
+        const price = parseFloat(item ? item.price.replace('$', '') : '0')
+        return sum + (price * qty)
+      }, 0)
+      
+      await ApiService.createPaymentIntent(totalAmount * 100) // cents
+      setOrderStatus('ordered')
+    } catch (err) {
+      console.error("Payment failed:", err)
+      alert("Payment processor error. Check network and try again.")
+    } finally {
+      setIsPaying(false)
+    }
   }
 
   const resetOrder = () => {
@@ -197,9 +219,50 @@ function App() {
                   " {currentQuote} "
                 </p>
               </div>
-              <button className="btn btn-sm btn-primary" onClick={rotateQuote} style={{ padding: stickyHandsMode ? '10px 20px' : '', fontSize: stickyHandsMode ? '1rem' : '' }}>
-                <i className="fa-solid fa-sync" /> Pester Armadillo
-              </button>
+              
+              <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginTop: '0.75rem' }}>
+                <button className="btn btn-sm btn-ghost" onClick={rotateQuote} style={{ padding: stickyHandsMode ? '10px 20px' : '', fontSize: stickyHandsMode ? '1rem' : '' }}>
+                  <i className="fa-solid fa-sync" /> Pester
+                </button>
+                
+                <input 
+                  type="text" 
+                  value={chatText} 
+                  onChange={(e) => setChatText(e.target.value)} 
+                  placeholder={isAskingAI ? "Armadillo thinking..." : "Talk to Armadillo..."}
+                  disabled={isAskingAI}
+                  style={{ 
+                    flex: '1', 
+                    background: '#000', 
+                    border: '1px solid var(--border)', 
+                    borderRadius: '20px', 
+                    padding: '0.5rem 1rem', 
+                    color: '#fff', 
+                    fontSize: '0.85rem' 
+                  }}
+                />
+                
+                <button 
+                  className="btn btn-sm btn-primary" 
+                  disabled={isAskingAI || !chatText.trim()}
+                  style={{ padding: stickyHandsMode ? '10px 20px' : '', fontSize: stickyHandsMode ? '1rem' : '' }}
+                  onClick={async () => {
+                    setIsAskingAI(true)
+                    try {
+                      const aiReply = await ApiService.askArmadilloAI(chatText)
+                      setCurrentQuote(aiReply)
+                      setChatText('')
+                    } catch (err) {
+                      console.error("OpenAI failed:", err)
+                      alert("Armadillo grunts: Add your VITE_OPENAI_API_KEY to the .env file to chat!")
+                    } finally {
+                      setIsAskingAI(false)
+                    }
+                  }}
+                >
+                  {isAskingAI ? "Typing..." : "Send"}
+                </button>
+              </div>
             </div>
           </div>
         </div>

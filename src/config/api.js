@@ -95,6 +95,49 @@ export const ApiService = {
   },
   async getMetrics(range = '7d') {
     return apiClient.get(`${API_ENDPOINTS.ANALYTICS.METRICS}?range=${range}`)
+  },
+  async createPaymentIntent(amount, currency = 'usd') {
+    console.log(`[Stripe Simulation] Creating payment intent for ${amount} ${currency.toUpperCase()}`)
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve({
+          clientSecret: `pi_mock_secret_${Math.random().toString(36).substring(2)}`,
+          status: 'succeeded',
+          amount,
+          currency
+        })
+      }, 800)
+    })
+  },
+  async askArmadilloAI(promptText) {
+    const key = API_KEYS.OPENAI_API_KEY
+    if (!key) {
+      throw new Error("Missing OpenAI API Key. Please add VITE_OPENAI_API_KEY to your .env file.")
+    }
+    
+    const response = await axios.post(
+      'https://api.openai.com/v1/chat/completions',
+      {
+        model: 'gpt-4o-mini',
+        messages: [
+          {
+            role: 'system',
+            content: 'You are a sassy, protective Texas Armadillo mascot with a "Weird Texas Emo Butch" attitude at the Mueller Sunday Market. Keep it short, blunt, and slightly grumpy. Remind people to keep their sticky fingers clean.'
+          },
+          {
+            role: 'user',
+            content: promptText
+          }
+        ]
+      },
+      {
+        headers: {
+          'Authorization': `Bearer ${key}`,
+          'Content-Type': 'application/json'
+        }
+      }
+    )
+    return response.data?.choices?.[0]?.message?.content || "Armadillo grunts and rolls away."
   }
 }
 
