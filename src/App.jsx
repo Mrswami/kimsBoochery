@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import ApiService from './config/api'
+import menuData from './data/menu_and_inventory.json'
 import './index.css'
 
 // ══════════════════════════════════════════════════════════════
@@ -7,42 +8,8 @@ import './index.css'
 // Modeled after Sovereign Nexus / jacobdev webapp architecture
 // ══════════════════════════════════════════════════════════════
 
-// Rich Flavors Menu with Ingredients & Tasting Notes
-const flavors = [
-  { 
-    id: 'sad-cactus', 
-    name: 'Sad Cactus', 
-    desc: 'Prickly pear & aloe. Brewed with tears & attitude.', 
-    price: '$5.00', 
-    color: 'rose',
-    ingredients: 'Organic Kombucha Culture, Wild Texas Prickly Pear Juice, Organic Aloe Vera Extract, Hibiscus Petals, Filtered Spring Water.',
-    tastingNotes: 'Sharp, dry finish with a sweet cactus-fruit body. Light floral undertones.',
-    bundlePrice: '$13.50',
-    bundleDesc: '3-bottle starter bundle (Save 10%)'
-  },
-  { 
-    id: 'lone-star', 
-    name: 'Lone Star Blackout', 
-    desc: 'Blackberry, charcoal, & oak. Dark & bold.', 
-    price: '$5.50', 
-    color: 'violet',
-    ingredients: 'Organic Kombucha Culture, Wild Blackberries, Activated Charcoal (Coconut Source), Sweet Oak Wood Infusion, Filtered Spring Water.',
-    tastingNotes: 'Rich, tannic, blackberry-forward with a smoky, earthy mouthfeel. Deep obsidian color.',
-    bundlePrice: '$15.00',
-    bundleDesc: '3-bottle cellar bundle (Save 9%)'
-  },
-  { 
-    id: 'grapefruit', 
-    name: 'Grapefruit Rustler', 
-    desc: 'Grapefruit, rosemary, & hops. Sturdy & sharp.', 
-    price: '$5.00', 
-    color: 'cyan',
-    ingredients: 'Organic Kombucha Culture, Cold-Pressed Pink Grapefruit Juice, Fresh Garden Rosemary, Cascade Hops, Filtered Spring Water.',
-    tastingNotes: 'Crisp citrus bitterness balanced by herbaceous piney-rosemary notes. Highly carbonated.',
-    bundlePrice: '$13.50',
-    bundleDesc: '3-bottle garden pack (Save 10%)'
-  },
-]
+// Flavors menu imported dynamically from menu_and_inventory.json
+const flavors = menuData.flavors
 
 function App() {
   const [isAdminMode, setIsAdminMode] = useState(false)
@@ -56,12 +23,8 @@ function App() {
   const [orderStatus, setOrderStatus] = useState(null) // null | 'ordered' | 'brewing' | 'pickup'
   const [isPaying, setIsPaying] = useState(false)
 
-  // Storage booking states
-  const [storageItems, setStorageItems] = useState([
-    { id: 'tank-a', name: 'Fermentation Tank Excess Space', desc: 'Rent excess tank capacity (up to 15 Gallons) in our temperature-controlled facility.', price: 12, available: 45, unit: 'gallons', icon: 'fa-soap', color: 'violet' },
-    { id: 'cold-room', name: 'Cold Room Keg/Box Storage', desc: 'Overnight refrigeration storage at Mueller Sunday Marketplace. Direct drop-off.', price: 8, available: 12, unit: 'kegs', icon: 'fa-snowflake', color: 'cyan' },
-    { id: 'booth-locker', name: 'Mueller Vendor Secure Lockers', desc: 'Secure onsite lockboxes to store display material or extra inventory between market weekends.', price: 25, available: 5, unit: 'lockers', icon: 'fa-vault', color: 'emerald' },
-  ])
+  // Storage booking states imported dynamically from menu_and_inventory.json
+  const [storageItems, setStorageItems] = useState(menuData.storageItems)
   const [bookingQty, setBookingQty] = useState({ 'tank-a': 1, 'cold-room': 1, 'booth-locker': 1 })
   const [bookings, setBookings] = useState([])
   const [customQrText, setCustomQrText] = useState('')
