@@ -7,6 +7,43 @@ import './index.css'
 // Modeled after Sovereign Nexus / jacobdev webapp architecture
 // ══════════════════════════════════════════════════════════════
 
+// Rich Flavors Menu with Ingredients & Tasting Notes
+const flavors = [
+  { 
+    id: 'sad-cactus', 
+    name: 'Sad Cactus', 
+    desc: 'Prickly pear & aloe. Brewed with tears & attitude.', 
+    price: '$5.00', 
+    color: 'rose',
+    ingredients: 'Organic Kombucha Culture, Wild Texas Prickly Pear Juice, Organic Aloe Vera Extract, Hibiscus Petals, Filtered Spring Water.',
+    tastingNotes: 'Sharp, dry finish with a sweet cactus-fruit body. Light floral undertones.',
+    bundlePrice: '$13.50',
+    bundleDesc: '3-bottle starter bundle (Save 10%)'
+  },
+  { 
+    id: 'lone-star', 
+    name: 'Lone Star Blackout', 
+    desc: 'Blackberry, charcoal, & oak. Dark & bold.', 
+    price: '$5.50', 
+    color: 'violet',
+    ingredients: 'Organic Kombucha Culture, Wild Blackberries, Activated Charcoal (Coconut Source), Sweet Oak Wood Infusion, Filtered Spring Water.',
+    tastingNotes: 'Rich, tannic, blackberry-forward with a smoky, earthy mouthfeel. Deep obsidian color.',
+    bundlePrice: '$15.00',
+    bundleDesc: '3-bottle cellar bundle (Save 9%)'
+  },
+  { 
+    id: 'grapefruit', 
+    name: 'Grapefruit Rustler', 
+    desc: 'Grapefruit, rosemary, & hops. Sturdy & sharp.', 
+    price: '$5.00', 
+    color: 'cyan',
+    ingredients: 'Organic Kombucha Culture, Cold-Pressed Pink Grapefruit Juice, Fresh Garden Rosemary, Cascade Hops, Filtered Spring Water.',
+    tastingNotes: 'Crisp citrus bitterness balanced by herbaceous piney-rosemary notes. Highly carbonated.',
+    bundlePrice: '$13.50',
+    bundleDesc: '3-bottle garden pack (Save 10%)'
+  },
+]
+
 function App() {
   const [isAdminMode, setIsAdminMode] = useState(false)
   const [currentView, setCurrentView] = useState('shop') // 'shop' | 'qr-storage' | 'admin-dashboard' | 'api-keys' | 'firebase' | 'activity'
@@ -34,6 +71,21 @@ function App() {
   const [chatText, setChatText] = useState('')
   const [isAskingAI, setIsAskingAI] = useState(false)
 
+  // URL Deep-linking for Dispenser QR Codes
+  const [activeModalFlavor, setActiveModalFlavor] = useState(null)
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const flavorId = params.get('flavor')
+    if (flavorId) {
+      const match = flavors.find(f => f.id === flavorId)
+      if (match) {
+        setActiveModalFlavor(match)
+        setCurrentView('shop')
+      }
+    }
+  }, [])
+
   // Live clock
   useEffect(() => {
     const timer = setInterval(() => setLiveTime(new Date()), 1000)
@@ -60,12 +112,6 @@ function App() {
     })
   }
 
-  // Flavors Menu
-  const flavors = [
-    { id: 'sad-cactus', name: 'Sad Cactus', desc: 'Prickly pear & aloe. Brewed with tears & attitude.', price: '$5.00', color: 'rose' },
-    { id: 'lone-star', name: 'Lone Star Blackout', desc: 'Blackberry, charcoal, & oak. Dark & bold.', price: '$5.50', color: 'violet' },
-    { id: 'grapefruit', name: 'Grapefruit Rustler', desc: 'Grapefruit, rosemary, & hops. Sturdy & sharp.', price: '$5.00', color: 'cyan' },
-  ]
 
   // Armadillo attitude quotes
   const armadilloQuotes = [
@@ -712,6 +758,130 @@ function App() {
           <i className="fa-solid fa-code" style={{ marginRight: '5px' }} /> View App Source Code
         </a>
       </footer>
+
+      {/* Dispenser QR Detail Modal */}
+      {activeModalFlavor && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0, 0, 0, 0.85)',
+          backdropFilter: 'blur(10px)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 9999,
+          padding: '1.5rem',
+        }}>
+          <div className="card animate-slide" style={{
+            maxWidth: '500px',
+            width: '100%',
+            border: `2px solid var(--accent-${activeModalFlavor.color})`,
+            boxShadow: `0 0 25px var(--accent-${activeModalFlavor.color})`,
+            position: 'relative',
+            padding: '2rem'
+          }}>
+            <button 
+              onClick={() => setActiveModalFlavor(null)}
+              style={{
+                position: 'absolute',
+                top: '15px',
+                right: '15px',
+                background: 'transparent',
+                border: 'none',
+                color: '#fff',
+                fontSize: '1.5rem',
+                cursor: 'pointer'
+              }}
+            >
+              <i className="fa-solid fa-xmark" />
+            </button>
+
+            <span style={{
+              background: `var(--accent-${activeModalFlavor.color})`,
+              color: '#000',
+              fontWeight: 'bold',
+              fontSize: '0.75rem',
+              padding: '4px 10px',
+              borderRadius: '20px',
+              textTransform: 'uppercase',
+              letterSpacing: '1px'
+            }}>
+              Draft Dispenser Tap
+            </span>
+
+            <h2 style={{ fontSize: '2rem', color: '#fff', margin: '0.75rem 0 0.5rem 0' }}>
+              {activeModalFlavor.name}
+            </h2>
+            
+            <p style={{ fontSize: '1rem', color: 'var(--text-secondary)', fontStyle: 'italic', marginBottom: '1.5rem' }}>
+              "{activeModalFlavor.desc}"
+            </p>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '2rem' }}>
+              <div style={{ background: 'rgba(255,255,255,0.02)', padding: '1rem', borderRadius: '8px', border: '1px solid var(--border)' }}>
+                <h4 style={{ fontSize: '0.8rem', color: `var(--accent-${activeModalFlavor.color})`, textTransform: 'uppercase', marginBottom: '0.25rem' }}>
+                  <i className="fa-solid fa-seedling" style={{ marginRight: '5px' }} /> Ingredients
+                </h4>
+                <p style={{ fontSize: '0.85rem', color: '#fff', lineHeight: '1.4' }}>
+                  {activeModalFlavor.ingredients}
+                </p>
+              </div>
+
+              <div style={{ background: 'rgba(255,255,255,0.02)', padding: '1rem', borderRadius: '8px', border: '1px solid var(--border)' }}>
+                <h4 style={{ fontSize: '0.8rem', color: `var(--accent-${activeModalFlavor.color})`, textTransform: 'uppercase', marginBottom: '0.25rem' }}>
+                  <i className="fa-solid fa-comment-dots" style={{ marginRight: '5px' }} /> Tasting Notes
+                </h4>
+                <p style={{ fontSize: '0.85rem', color: '#fff', lineHeight: '1.4' }}>
+                  {activeModalFlavor.tastingNotes}
+                </p>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(0, 210, 255, 0.05)', padding: '12px 15px', borderRadius: '8px', border: '1px solid var(--accent-cyan)' }}>
+                <div>
+                  <div style={{ fontSize: '0.9rem', color: '#fff', fontWeight: 'bold' }}>Single Serving</div>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Perfect for drinking now</div>
+                </div>
+                <button 
+                  className="btn btn-primary"
+                  onClick={() => {
+                    addToCart(activeModalFlavor.id)
+                    setActiveModalFlavor(null)
+                  }}
+                  style={{ padding: '0.5rem 1rem', fontSize: '0.85rem' }}
+                >
+                  Add Cup ({activeModalFlavor.price})
+                </button>
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(139, 92, 246, 0.05)', padding: '12px 15px', borderRadius: '8px', border: '1px solid var(--accent-violet)' }}>
+                <div>
+                  <div style={{ fontSize: '0.9rem', color: '#fff', fontWeight: 'bold' }}>Market Bundle Deal</div>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{activeModalFlavor.bundleDesc}</div>
+                </div>
+                <button 
+                  className="btn btn-primary"
+                  onClick={() => {
+                    // Add 3 to cart
+                    setCart(prev => ({
+                      ...prev,
+                      [activeModalFlavor.id]: (prev[activeModalFlavor.id] || 0) + 3
+                    }))
+                    setActiveModalFlavor(null)
+                  }}
+                  style={{ padding: '0.5rem 1rem', fontSize: '0.85rem', background: 'var(--accent-violet)', border: 'none' }}
+                >
+                  Add Bundle ({activeModalFlavor.bundlePrice})
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
