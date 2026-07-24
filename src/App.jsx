@@ -9,7 +9,7 @@ import './index.css'
 
 function App() {
   const [isAdminMode, setIsAdminMode] = useState(false)
-  const [currentView, setCurrentView] = useState('shop') // 'shop' | 'admin-dashboard' | 'api-keys' | 'firebase' | 'activity'
+  const [currentView, setCurrentView] = useState('shop') // 'shop' | 'qr-storage' | 'admin-dashboard' | 'api-keys' | 'firebase' | 'activity'
   const [stickyHandsMode, setStickyHandsMode] = useState(false)
   const [liveTime, setLiveTime] = useState(new Date())
   const [apiKeysVisible, setApiKeysVisible] = useState({})
@@ -18,6 +18,17 @@ function App() {
   const [cart, setCart] = useState({})
   const [orderStatus, setOrderStatus] = useState(null) // null | 'ordered' | 'brewing' | 'pickup'
   const [isPaying, setIsPaying] = useState(false)
+
+  // Storage booking states
+  const [storageItems, setStorageItems] = useState([
+    { id: 'tank-a', name: 'Fermentation Tank Excess Space', desc: 'Rent excess tank capacity (up to 15 Gallons) in our temperature-controlled facility.', price: 12, available: 45, unit: 'gallons', icon: 'fa-soap', color: 'violet' },
+    { id: 'cold-room', name: 'Cold Room Keg/Box Storage', desc: 'Overnight refrigeration storage at Mueller Sunday Marketplace. Direct drop-off.', price: 8, available: 12, unit: 'kegs', icon: 'fa-snowflake', color: 'cyan' },
+    { id: 'booth-locker', name: 'Mueller Vendor Secure Lockers', desc: 'Secure onsite lockboxes to store display material or extra inventory between market weekends.', price: 25, available: 5, unit: 'lockers', icon: 'fa-vault', color: 'emerald' },
+  ])
+  const [bookingQty, setBookingQty] = useState({ 'tank-a': 1, 'cold-room': 1, 'booth-locker': 1 })
+  const [bookings, setBookings] = useState([])
+  const [customQrText, setCustomQrText] = useState('')
+  const [generatedQr, setGeneratedQr] = useState('https://kimboocherly-app.web.app/')
 
   // Mascot Chat State
   const [chatText, setChatText] = useState('')
@@ -165,8 +176,23 @@ function App() {
           <span className="logo-text">KIMBOOCHERLY</span>
         </div>
 
-        {/* Consumer Options: Sticky Mode Toggle */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        {/* Consumer Options: Navigation & Sticky Toggle */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+          <nav className="nav-links" style={{ display: 'flex', gap: '8px' }}>
+            <button
+              className={`nav-link ${currentView === 'shop' ? 'active' : ''}`}
+              onClick={() => setCurrentView('shop')}
+            >
+              <i className="fa-solid fa-store" style={{ marginRight: '5px' }} /> Shop
+            </button>
+            <button
+              className={`nav-link ${currentView === 'qr-storage' ? 'active' : ''}`}
+              onClick={() => setCurrentView('qr-storage')}
+            >
+              <i className="fa-solid fa-qrcode" style={{ marginRight: '5px' }} /> QR & Storage
+            </button>
+          </nav>
+
           <button 
             className={`btn btn-sm ${stickyHandsMode ? 'btn-primary' : 'btn-ghost'}`} 
             onClick={() => setStickyHandsMode(!stickyHandsMode)}
@@ -176,14 +202,15 @@ function App() {
           </button>
 
           {isAdminMode && (
-            <nav className="nav-links">
-              {['shop', 'admin-dashboard', 'api-keys', 'firebase', 'activity'].map(view => (
+            <nav className="nav-links" style={{ display: 'flex', gap: '5px', borderLeft: '1px solid var(--border)', paddingLeft: '10px' }}>
+              {['admin-dashboard', 'api-keys', 'firebase', 'activity'].map(view => (
                 <button
                   key={view}
                   className={`nav-link ${currentView === view ? 'active' : ''}`}
                   onClick={() => setCurrentView(view)}
+                  style={{ fontSize: '0.8rem' }}
                 >
-                  {view === 'shop' ? 'Shop View' : view.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}
+                  {view.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}
                 </button>
               ))}
             </nav>
@@ -362,6 +389,215 @@ function App() {
                 <div style={{ display: 'flex', gap: '10px' }}>
                   <button className="btn btn-ghost" onClick={clearCart} style={{ flex: '1', padding: stickyHandsMode ? '1rem' : '' }}>Clear</button>
                   <button className="btn btn-primary" onClick={placeOrder} style={{ flex: '2', padding: stickyHandsMode ? '1rem' : '' }}>Pay & Order</button>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* QR & Storage View */}
+        {currentView === 'qr-storage' && (
+          <div className="animate-fade" style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+            
+            {/* Split layout for QR Generator and Excess Capacity Sales */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1.5rem' }}>
+              
+              {/* QR Section */}
+              <div className="card" style={{ border: '1px solid var(--accent-cyan)' }}>
+                <h3 style={{ fontSize: '1.2rem', color: 'var(--accent-cyan)', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <i className="fa-solid fa-qrcode" /> Sunday Market Quick QR Generator
+                </h3>
+                <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>
+                  Generate custom check-in codes for pickup orders, table service, or booth check-ins at the marketplace.
+                </p>
+
+                <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
+                  <div style={{ flex: '1', minWidth: '250px', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                    <div>
+                      <label style={{ fontSize: '0.8rem', color: 'var(--text-muted)', display: 'block', marginBottom: '0.5rem' }}>Preset Quick-Codes</label>
+                      <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                        <button 
+                          className="btn btn-sm btn-ghost" 
+                          onClick={() => {
+                            setCustomQrText("KIMBOOCHERLY-BOOTH12-CHECKIN")
+                            setGeneratedQr("KIMBOOCHERLY-BOOTH12-CHECKIN")
+                          }}
+                        >
+                          Booth #12 Check-in
+                        </button>
+                        <button 
+                          className="btn btn-sm btn-ghost"
+                          onClick={() => {
+                            setCustomQrText("KIMBOOCHERLY-MENU-ONLINE")
+                            setGeneratedQr("https://kimboocherly-app.web.app/")
+                          }}
+                        >
+                          Booch Menu Link
+                        </button>
+                        <button 
+                          className="btn btn-sm btn-ghost"
+                          onClick={() => {
+                            setCustomQrText("EXCESS-STORAGE-PASS-4")
+                            setGeneratedQr("EXCESS-STORAGE-PASS-4")
+                          }}
+                        >
+                          Locker #4 Pass
+                        </button>
+                      </div>
+                    </div>
+
+                    <div>
+                      <label style={{ fontSize: '0.8rem', color: 'var(--text-muted)', display: 'block', marginBottom: '0.5rem' }}>Custom Text or URL</label>
+                      <textarea
+                        value={customQrText}
+                        onChange={(e) => setCustomQrText(e.target.value)}
+                        placeholder="Enter URL, order ID, or custom text..."
+                        rows="3"
+                        style={{
+                          width: '100%',
+                          background: '#000',
+                          border: '1px solid var(--border)',
+                          borderRadius: '8px',
+                          padding: '0.75rem',
+                          color: '#fff',
+                          fontSize: '0.85rem',
+                          fontFamily: 'var(--font-mono)'
+                        }}
+                      />
+                    </div>
+
+                    <button 
+                      className="btn btn-primary"
+                      onClick={() => setGeneratedQr(customQrText || 'https://kimboocherly-app.web.app/')}
+                    >
+                      Generate QR Code
+                    </button>
+                  </div>
+
+                  <div style={{ width: '220px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0.3)', borderRadius: '12px', border: '1px solid var(--border)', padding: '1rem', margin: '0 auto' }}>
+                    {generatedQr ? (
+                      <>
+                        <img 
+                          src={`https://api.qrserver.com/v1/create-qr-code/?size=160x160&color=06b6d4&bgcolor=09090b&data=${encodeURIComponent(generatedQr)}`}
+                          alt="Generated QR Code"
+                          style={{ width: '160px', height: '160px', borderRadius: '4px', border: '2px solid var(--accent-cyan)' }}
+                        />
+                        <div style={{ marginTop: '0.75rem', fontSize: '0.75rem', color: 'var(--text-muted)', wordBreak: 'break-all', textAlign: 'center', maxWidth: '160px' }}>
+                          Value: <code>{generatedQr.length > 25 ? generatedQr.substring(0, 22) + '...' : generatedQr}</code>
+                        </div>
+                      </>
+                    ) : (
+                      <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', textAlign: 'center' }}>
+                        Input data to generate live QR
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Excess Capacity / Storage Section */}
+              <div className="card" style={{ border: '1px solid var(--border)' }}>
+                <h3 style={{ fontSize: '1.2rem', color: 'var(--accent-violet)', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <i className="fa-solid fa-boxes-packing" /> Excess Storage & Equipment Rentals
+                </h3>
+                <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>
+                  Book excess cold storage, fermentation capacity, or secure vendor lockers. Rent capacity by the night or weekend.
+                </p>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
+                  {storageItems.map(item => (
+                    <div key={item.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1.2rem', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border)', borderRadius: '8px', flexWrap: 'wrap', gap: '1rem' }}>
+                      <div style={{ flex: '1', minWidth: '200px' }}>
+                        <h4 style={{ fontSize: '1rem', color: '#fff', display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '0.25rem' }}>
+                          <i className={`fa-solid ${item.icon}`} style={{ color: `var(--accent-${item.color})` }} />
+                          {item.name}
+                        </h4>
+                        <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{item.desc}</p>
+                        <div style={{ marginTop: '0.5rem', display: 'flex', gap: '15px', fontSize: '0.8rem' }}>
+                          <span style={{ color: 'var(--accent-cyan)' }}>Rate: <strong>${item.price}</strong></span>
+                          <span style={{ color: 'var(--text-muted)' }}>Available: <strong>{item.available} {item.unit}</strong></span>
+                        </div>
+                      </div>
+
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', background: '#000', border: '1px solid var(--border)', borderRadius: '20px', padding: '2px 8px' }}>
+                          <button 
+                            className="btn btn-sm btn-ghost" 
+                            style={{ padding: '0.25rem 0.5rem', minWidth: '24px' }}
+                            onClick={() => setBookingQty(prev => ({ ...prev, [item.id]: Math.max(1, prev[item.id] - 1) }))}
+                          >
+                            -
+                          </button>
+                          <span style={{ width: '30px', textAlign: 'center', fontSize: '0.85rem' }}>{bookingQty[item.id]}</span>
+                          <button 
+                            className="btn btn-sm btn-ghost"
+                            style={{ padding: '0.25rem 0.5rem', minWidth: '24px' }}
+                            onClick={() => setBookingQty(prev => ({ ...prev, [item.id]: Math.min(item.available, prev[item.id] + 1) }))}
+                          >
+                            +
+                          </button>
+                        </div>
+
+                        <button 
+                          className="btn btn-primary"
+                          onClick={() => {
+                            const qty = bookingQty[item.id]
+                            if (qty > item.available) return
+                            
+                            // Deduct from local availability
+                            setStorageItems(prev => prev.map(s => s.id === item.id ? { ...s, available: s.available - qty } : s))
+                            
+                            // Add booking
+                            const newBooking = {
+                              id: `KB-SR-${Math.floor(1000 + Math.random() * 9000)}`,
+                              itemName: item.name,
+                              qty,
+                              unit: item.unit,
+                              totalPrice: qty * item.price,
+                              timestamp: new Date().toLocaleString()
+                            }
+                            setBookings(prev => [newBooking, ...prev])
+                            
+                            // Automatically generate check-in QR for the new booking
+                            setGeneratedQr(JSON.stringify({ bookingId: newBooking.id, item: newBooking.itemName, qty: newBooking.qty }))
+                          }}
+                        >
+                          Reserve Space
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Bookings Tracker */}
+            {bookings.length > 0 && (
+              <div className="card animate-slide" style={{ border: '1px solid var(--accent-emerald)' }}>
+                <h3 style={{ fontSize: '1.1rem', color: 'var(--accent-emerald)', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <i className="fa-solid fa-receipt" /> Active Excess Storage Bookings
+                </h3>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '10px' }}>
+                  {bookings.map(b => (
+                    <div key={b.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(16, 185, 129, 0.05)', border: '1px solid rgba(16, 185, 129, 0.2)', padding: '1rem', borderRadius: '8px', flexWrap: 'wrap', gap: '10px' }}>
+                      <div>
+                        <span style={{ fontSize: '0.8rem', color: 'var(--accent-emerald)', fontWeight: 'bold' }}>{b.id}</span>
+                        <h4 style={{ fontSize: '0.95rem', margin: '2px 0' }}>{b.itemName}</h4>
+                        <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                          Qty: {b.qty} {b.unit} | Reserved on: {b.timestamp}
+                        </span>
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                        <span style={{ fontWeight: 'bold', color: '#fff' }}>${b.totalPrice}</span>
+                        <button 
+                          className="btn btn-sm btn-ghost"
+                          onClick={() => setGeneratedQr(JSON.stringify({ bookingId: b.id, item: b.itemName, qty: b.qty }))}
+                        >
+                          <i className="fa-solid fa-qrcode" style={{ marginRight: '5px' }} /> View QR
+                        </button>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             )}
