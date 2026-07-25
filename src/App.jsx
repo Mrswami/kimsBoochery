@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react'
+import { initializeApp } from 'firebase/app'
+import { getFunctions, httpsCallable } from 'firebase/functions'
 import ApiService from './config/api'
 import menuData from './data/menu_and_inventory.json'
 import './index.css'
@@ -10,11 +12,33 @@ import './index.css'
 
 const flavors = menuData.flavors
 
+// Initialize Firebase for Cloud Functions
+const firebaseConfig = {
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+};
+let app;
+try {
+  app = initializeApp(firebaseConfig);
+} catch (e) {
+  console.warn("Firebase app already initialized", e);
+}
+const functions = getFunctions(app);
+
 function App() {
   const [isAdminMode, setIsAdminMode] = useState(false)
   const [currentView, setCurrentView] = useState('shop') // 'shop' | 'qr-storage' | 'admin-dashboard' | 'api-keys' | 'firebase' | 'activity'
   const [stickyHandsMode, setStickyHandsMode] = useState(false)
   const [liveTime, setLiveTime] = useState(new Date())
+
+  // AI Recommender State
+  const [cravingInput, setCravingInput] = useState('')
+  const [isRecommending, setIsRecommending] = useState(false)
+  const [sortedFlavors, setSortedFlavors] = useState(flavors)
   
   // Cart & Payment State
   const [cart, setCart] = useState({})
@@ -67,6 +91,44 @@ function App() {
   const rotateQuote = () => {
     const nextIdx = (armadilloQuotes.indexOf(currentQuote) + 1) % armadilloQuotes.length
     setCurrentQuote(armadilloQuotes[nextIdx])
+  }
+
+  const getAIRecommendation = async () => {
+    if (!cravingInput.trim()) {
+      setSortedFlavors(flavors)
+      return
+    }
+    
+    setIsRecommending(true)
+    try {
+      const getFlavorRecommendation = httpsCallable(functions, 'getFlavorRecommendation')
+      
+      const payload = {
+        cravingInput,
+        flavors: flavors.map(f => ({ id: f.id, name: f.name, desc: f.desc, ingredients: f.ingredients }))
+      }
+
+      const result = await getFlavorRecommendation(payload)
+      const sortedIds = result.data.sortedIds
+      
+      if (Array.isArray(sortedIds)) {
+        const sorted = []
+        sortedIds.forEach(id => {
+          const f = flavors.find(x => x.id === id)
+          if (f) sorted.push(f)
+        })
+        
+        flavors.forEach(f => {
+          if (!sorted.find(x => x.id === f.id)) sorted.push(f)
+        })
+        
+        setSortedFlavors(sorted)
+      }
+    } catch (err) {
+      console.error("AI Recommendation Error:", err)
+    } finally {
+      setIsRecommending(false)
+    }
   }
 
   const addToCart = (flavorId, qty = 1) => {
@@ -264,9 +326,30 @@ function App() {
               </div>
             )}
 
+            {/* AI Flavor Recommender */}
+            <div className="card" style={{ marginBottom: '1.5rem', border: '1px solid var(--accent-violet)', background: 'rgba(139, 92, 246, 0.04)' }}>
+              <h3 style={{ fontSize: '1.05rem', color: 'var(--accent-violet)', marginBottom: '0.75rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <i className="fa-solid fa-wand-magic-sparkles" /> Tell Butch What You're Craving
+              </h3>
+              <div style={{ display: 'flex', gap: '10px' }}>
+                <input 
+                  type="text" 
+                  className="input" 
+                  placeholder="e.g. I want something sweet and fruity"
+                  value={cravingInput}
+                  onChange={(e) => setCravingInput(e.target.value)}
+                  style={{ flex: '1', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: '#090d16', color: '#fff' }}
+                  onKeyDown={(e) => e.key === 'Enter' && getAIRecommendation()}
+                />
+                <button className="btn btn-primary" onClick={getAIRecommendation} disabled={isRecommending} style={{ background: 'var(--accent-violet)', color: '#fff', border: 'none' }}>
+                  {isRecommending ? <i className="fa-solid fa-spinner fa-spin" /> : "Sort Menu"}
+                </button>
+              </div>
+            </div>
+
             {/* Flavor Cards */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1rem' }}>
-              {flavors.map(flavor => {
+              {sortedFlavors.map(flavor => {
                 const count = cart[flavor.id] || 0
                 return (
                   <div key={flavor.id} className="card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1.25rem', borderLeft: `3px solid var(--accent-${flavor.color})` }}>
