@@ -46,6 +46,32 @@
       "bundlePrice": "$13.50",
       "bundleRawPrice": 13.50,
       "bundleDesc": "3-bottle garden pack (Save 10%)"
+    },
+    {
+      "id": "citrus-surge",
+      "name": "Citrus Surge",
+      "desc": "Blood orange, fresh ginger, & raw turmeric. Zesty & spicy.",
+      "price": "$5.50",
+      "rawPrice": 5.50,
+      "color": "amber",
+      "ingredients": "Organic Kombucha Culture, Pressed Blood Orange, Organic Peruvian Ginger Root, Fresh Turmeric, Raw Texas Honey.",
+      "tastingNotes": "Tangy citrus bite with a warm ginger burn on the throat. Bright golden amber hue.",
+      "bundlePrice": "$15.00",
+      "bundleRawPrice": 15.00,
+      "bundleDesc": "3-bottle spice pack (Save 9%)"
+    },
+    {
+      "id": "hill-country",
+      "name": "Hill Country Lavender",
+      "desc": "Texas lavender, wild blueberry, & lemon balm. Soothing & floral.",
+      "price": "$5.25",
+      "rawPrice": 5.25,
+      "color": "emerald",
+      "ingredients": "Organic Kombucha Culture, Culinary Lavender Buds, Hill Country Blueberries, Lemon Balm Tea, Spring Water.",
+      "tastingNotes": "Aromatic floral aroma with a subtle berry sweetness and soothing herbal finish.",
+      "bundlePrice": "$14.00",
+      "bundleRawPrice": 14.00,
+      "bundleDesc": "3-bottle relaxation pack (Save 11%)"
     }
   ],
   "storageItems": [
@@ -78,6 +104,16 @@
       "unit": "lockers",
       "icon": "fa-vault",
       "color": "emerald"
+    },
+    {
+      "id": "trailer-slot",
+      "name": "Mobile Cold Trailer Bay",
+      "desc": "Dedicated temperature-monitored slot in our mobile refrigeration trailer for Sunday Market delivery.",
+      "price": 35,
+      "available": 3,
+      "unit": "bays",
+      "icon": "fa-truck-ramp-box",
+      "color": "amber"
     }
   ]
 }
