@@ -470,30 +470,58 @@ function App() {
               })}
             </div>
 
-            {/* Dual Checkout Area */}
+            {/* Universal Checkout Area */}
             {Object.keys(cart).length > 0 && !orderStatus && (
               <div className="card animate-slide" style={{ marginTop: '2rem', border: '1px solid var(--accent-cyan)' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '10px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '12px' }}>
                   <h4 style={{ color: '#fff', fontSize: stickyHandsMode ? '1.35rem' : '1.15rem' }}>
                     <i className="fa-solid fa-cart-shopping" style={{ marginRight: '8px', color: 'var(--accent-cyan)' }} />
-                    Order Summary & Sunday Checkout
+                    Order Summary & Universal Checkout
                   </h4>
 
-                  {/* Dual Payment Selector */}
-                  <div style={{ display: 'flex', gap: '6px', background: 'rgba(255,255,255,0.03)', padding: '3px', borderRadius: '20px', border: '1px solid var(--border)' }}>
+                  {/* Universal Payment Method Pills */}
+                  <div style={{ display: 'flex', gap: '6px', background: 'rgba(255,255,255,0.03)', padding: '4px', borderRadius: '20px', border: '1px solid var(--border)', flexWrap: 'wrap' }}>
                     <button 
-                      className={`btn btn-sm ${paymentMode === 'card' ? 'btn-primary' : 'btn-ghost'}`}
-                      onClick={() => setPaymentMode('card')}
-                      style={{ padding: '0.3rem 0.8rem', fontSize: '0.75rem' }}
+                      className={`btn btn-sm ${paymentMode === 'apple-pay' ? 'btn-primary' : 'btn-ghost'}`}
+                      onClick={() => setPaymentMode('apple-pay')}
+                      style={{ padding: '0.3rem 0.75rem', fontSize: '0.75rem' }}
                     >
-                      <i className="fa-solid fa-credit-card" /> Card
+                      <i className="fa-brands fa-apple" /> Apple Pay
+                    </button>
+                    <button 
+                      className={`btn btn-sm ${paymentMode === 'gpay' ? 'btn-primary' : 'btn-ghost'}`}
+                      onClick={() => setPaymentMode('gpay')}
+                      style={{ padding: '0.3rem 0.75rem', fontSize: '0.75rem' }}
+                    >
+                      <i className="fa-brands fa-google" /> GPay
                     </button>
                     <button 
                       className={`btn btn-sm ${paymentMode === 'venmo' ? 'btn-primary' : 'btn-ghost'}`}
                       onClick={() => setPaymentMode('venmo')}
-                      style={{ padding: '0.3rem 0.8rem', fontSize: '0.75rem' }}
+                      style={{ padding: '0.3rem 0.75rem', fontSize: '0.75rem' }}
                     >
-                      <i className="fa-solid fa-qrcode" /> Venmo / Cash QR
+                      <i className="fa-solid fa-qrcode" /> Venmo / CashApp
+                    </button>
+                    <button 
+                      className={`btn btn-sm ${paymentMode === 'card' ? 'btn-primary' : 'btn-ghost'}`}
+                      onClick={() => setPaymentMode('card')}
+                      style={{ padding: '0.3rem 0.75rem', fontSize: '0.75rem' }}
+                    >
+                      <i className="fa-solid fa-credit-card" /> Card
+                    </button>
+                    <button 
+                      className={`btn btn-sm ${paymentMode === 'cash' ? 'btn-primary' : 'btn-ghost'}`}
+                      onClick={() => setPaymentMode('cash')}
+                      style={{ padding: '0.3rem 0.75rem', fontSize: '0.75rem' }}
+                    >
+                      <i className="fa-solid fa-money-bill-wave" /> Cash #12
+                    </button>
+                    <button 
+                      className={`btn btn-sm ${paymentMode === 'ebt' ? 'btn-primary' : 'btn-ghost'}`}
+                      onClick={() => setPaymentMode('ebt')}
+                      style={{ padding: '0.3rem 0.75rem', fontSize: '0.75rem' }}
+                    >
+                      <i className="fa-solid fa-coins" /> EBT / Bucks
                     </button>
                   </div>
                 </div>
@@ -511,29 +539,62 @@ function App() {
                     )
                   })}
                   <div style={{ borderTop: '1px solid var(--border)', paddingTop: '0.75rem', display: 'flex', justifyContent: 'space-between', fontWeight: '800', fontSize: '1.1rem', color: 'var(--accent-cyan)' }}>
-                    <span>Estimated Total:</span>
+                    <span>Total Due:</span>
                     <span>${calculateCartTotal().toFixed(2)}</span>
                   </div>
                 </div>
 
-                {paymentMode === 'venmo' ? (
-                  <div style={{ background: 'rgba(0, 210, 255, 0.05)', border: '1px solid var(--accent-cyan)', padding: '1rem', borderRadius: '10px', textAlign: 'center', marginBottom: '1.25rem' }}>
+                {/* Conditional Payment Guidance Panels */}
+                {paymentMode === 'apple-pay' && (
+                  <div style={{ background: 'rgba(255, 255, 255, 0.04)', border: '1px solid var(--accent-cyan)', padding: '1.1rem', borderRadius: '12px', textAlign: 'center', marginBottom: '1.25rem' }}>
+                    <i className="fa-brands fa-apple" style={{ fontSize: '2.2rem', color: '#fff', marginBottom: '0.5rem' }} />
+                    <p style={{ fontSize: '0.9rem', color: '#fff', fontWeight: '700' }}>Double Click Side Button to Pay with Apple Pay</p>
+                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Tap-to-Pay ready for mobile device camera / NFC</span>
+                  </div>
+                )}
+
+                {paymentMode === 'gpay' && (
+                  <div style={{ background: 'rgba(0, 210, 255, 0.05)', border: '1px solid var(--accent-cyan)', padding: '1.1rem', borderRadius: '12px', textAlign: 'center', marginBottom: '1.25rem' }}>
+                    <i className="fa-brands fa-google" style={{ fontSize: '2rem', color: 'var(--accent-cyan)', marginBottom: '0.5rem' }} />
+                    <p style={{ fontSize: '0.9rem', color: '#fff', fontWeight: '700' }}>Google Pay Express Kiosk Checkout</p>
+                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Instant one-touch payment via Google Wallet</span>
+                  </div>
+                )}
+
+                {paymentMode === 'venmo' && (
+                  <div style={{ background: 'rgba(0, 210, 255, 0.05)', border: '1px solid var(--accent-cyan)', padding: '1rem', borderRadius: '12px', textAlign: 'center', marginBottom: '1.25rem' }}>
                     <p style={{ fontSize: '0.85rem', color: '#fff', fontWeight: '700', marginBottom: '0.5rem' }}>
-                      Scan QR at Booth #12 or pay cash directly to Texas Butch
+                      Scan QR Code with Venmo or Cash App Camera
                     </p>
                     <img 
                       src={`https://api.qrserver.com/v1/create-qr-code/?size=140x140&color=00d2ff&bgcolor=0a0f1a&data=${encodeURIComponent(`VENMO-KIMSBOOCHERY-TOTAL-${calculateCartTotal().toFixed(2)}`)}`}
                       alt="Venmo Payment QR"
-                      style={{ width: '130px', height: '130px', borderRadius: '6px', border: '2px solid var(--accent-cyan)', margin: '0 auto 0.5rem auto' }}
+                      style={{ width: '130px', height: '130px', borderRadius: '8px', border: '2px solid var(--accent-cyan)', margin: '0 auto 0.5rem auto' }}
                     />
-                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Scan with Venmo camera or present exact change</div>
+                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Send ${calculateCartTotal().toFixed(2)} to @KimsBoochery on Venmo</div>
                   </div>
-                ) : null}
+                )}
+
+                {paymentMode === 'cash' && (
+                  <div style={{ background: 'rgba(16, 185, 129, 0.05)', border: '1px solid var(--accent-emerald)', padding: '1rem', borderRadius: '12px', textAlign: 'center', marginBottom: '1.25rem' }}>
+                    <i className="fa-solid fa-money-bill-wave" style={{ fontSize: '2rem', color: 'var(--accent-emerald)', marginBottom: '0.5rem' }} />
+                    <p style={{ fontSize: '0.9rem', color: 'var(--accent-emerald)', fontWeight: '700' }}>Pay Cash at Booth #12 Counter</p>
+                    <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Present exact change or bills to Texas Butch upon pickup</span>
+                  </div>
+                )}
+
+                {paymentMode === 'ebt' && (
+                  <div style={{ background: 'rgba(245, 158, 11, 0.05)', border: '1px solid var(--accent-amber)', padding: '1rem', borderRadius: '12px', textAlign: 'center', marginBottom: '1.25rem' }}>
+                    <i className="fa-solid fa-coins" style={{ fontSize: '2rem', color: 'var(--accent-amber)', marginBottom: '0.5rem' }} />
+                    <p style={{ fontSize: '0.9rem', color: 'var(--accent-amber)', fontWeight: '700' }}>Farmers Market EBT / Double Up Food Bucks Token</p>
+                    <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Hand green/yellow market tokens at Mueller Market Booth #12</span>
+                  </div>
+                )}
 
                 <div style={{ display: 'flex', gap: '12px' }}>
                   <button className="btn btn-ghost" onClick={clearCart} style={{ flex: '1' }}>Clear Cart</button>
                   <button className="btn btn-primary" onClick={placeOrder} disabled={isPaying} style={{ flex: '2' }}>
-                    {isPaying ? "Processing..." : paymentMode === 'venmo' ? "Confirm Venmo/Cash & Order" : "Pay Card & Send to Booth #12"}
+                    {isPaying ? "Processing..." : `Pay with ${paymentMode.replace('-', ' ').toUpperCase()} ($${calculateCartTotal().toFixed(2)})`}
                   </button>
                 </div>
               </div>
