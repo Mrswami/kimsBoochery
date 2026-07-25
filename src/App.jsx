@@ -21,6 +21,7 @@ function App() {
   const [orderStatus, setOrderStatus] = useState(null) // null | 'ordered' | 'brewing' | 'pickup'
   const [isPaying, setIsPaying] = useState(false)
   const [lastOrderDetails, setLastOrderDetails] = useState(null)
+  const [paymentMode, setPaymentMode] = useState('card') // 'card' | 'venmo'
 
   // Storage booking states
   const [storageItems, setStorageItems] = useState(menuData.storageItems)
@@ -201,7 +202,7 @@ function App() {
             style={{ width: '42px', height: '42px', borderRadius: '10px', border: '1px solid var(--accent-cyan)', boxShadow: '0 0 10px rgba(0, 210, 255, 0.3)' }} 
           />
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <span className="logo-text">KIMBOOCHERLY</span>
+            <span className="logo-text">KIM'S BOOCHERY</span>
             <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)', letterSpacing: '0.05em' }}>MUELLER SUNDAY MARKET</span>
           </div>
         </div>
@@ -284,10 +285,20 @@ function App() {
                 </p>
               </div>
               
-              <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '0.6rem' }}>
                 <button className="btn btn-sm btn-ghost" onClick={rotateQuote}>
-                  <i className="fa-solid fa-sync" /> Pester Armadillo
+                  <i className="fa-solid fa-sync" /> Pester Butch
                 </button>
+                <button className="btn btn-sm btn-ghost" onClick={() => setCurrentQuote("Booth #12 is straight past the solar-powered acoustic guitarist at Mueller Market. Look for the black obsidian flag!")}>
+                  <i className="fa-solid fa-location-dot" /> Booth #12
+                </button>
+                <button className="btn btn-sm btn-ghost" onClick={() => setCurrentQuote("SCOBY stands for Symbiotic Culture of Bacteria and Yeast. It's living art. Touch it and you lose a fingernail.")}>
+                  <i className="fa-solid fa-vial" /> Microbes
+                </button>
+                <button className="btn btn-sm btn-ghost" onClick={() => setCurrentQuote("Wipe your hands on your jeans before touching my tap handles! Sticky Hands Mode was made for dirty fingers.")}>
+                  <i className="fa-solid fa-hands-wash" /> Sticky Rule
+                </button>
+              </div>
 
                 <div style={{ flex: '1', display: 'flex', gap: '8px', minWidth: '220px' }}>
                   <input 
@@ -342,7 +353,6 @@ function App() {
               </div>
             </div>
           </div>
-        </div>
 
         {/* Market Shop View */}
         {currentView === 'shop' && (
@@ -460,13 +470,33 @@ function App() {
               })}
             </div>
 
-            {/* Checkout Area */}
+            {/* Dual Checkout Area */}
             {Object.keys(cart).length > 0 && !orderStatus && (
               <div className="card animate-slide" style={{ marginTop: '2rem', border: '1px solid var(--accent-cyan)' }}>
-                <h4 style={{ color: '#fff', marginBottom: '1rem', fontSize: stickyHandsMode ? '1.35rem' : '1.15rem' }}>
-                  <i className="fa-solid fa-cart-shopping" style={{ marginRight: '8px', color: 'var(--accent-cyan)' }} />
-                  Order Summary & Sunday Checkout
-                </h4>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '10px' }}>
+                  <h4 style={{ color: '#fff', fontSize: stickyHandsMode ? '1.35rem' : '1.15rem' }}>
+                    <i className="fa-solid fa-cart-shopping" style={{ marginRight: '8px', color: 'var(--accent-cyan)' }} />
+                    Order Summary & Sunday Checkout
+                  </h4>
+
+                  {/* Dual Payment Selector */}
+                  <div style={{ display: 'flex', gap: '6px', background: 'rgba(255,255,255,0.03)', padding: '3px', borderRadius: '20px', border: '1px solid var(--border)' }}>
+                    <button 
+                      className={`btn btn-sm ${paymentMode === 'card' ? 'btn-primary' : 'btn-ghost'}`}
+                      onClick={() => setPaymentMode('card')}
+                      style={{ padding: '0.3rem 0.8rem', fontSize: '0.75rem' }}
+                    >
+                      <i className="fa-solid fa-credit-card" /> Card
+                    </button>
+                    <button 
+                      className={`btn btn-sm ${paymentMode === 'venmo' ? 'btn-primary' : 'btn-ghost'}`}
+                      onClick={() => setPaymentMode('venmo')}
+                      style={{ padding: '0.3rem 0.8rem', fontSize: '0.75rem' }}
+                    >
+                      <i className="fa-solid fa-qrcode" /> Venmo / Cash QR
+                    </button>
+                  </div>
+                </div>
                 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '1.25rem' }}>
                   {Object.entries(cart).map(([id, qty]) => {
@@ -486,10 +516,24 @@ function App() {
                   </div>
                 </div>
 
+                {paymentMode === 'venmo' ? (
+                  <div style={{ background: 'rgba(0, 210, 255, 0.05)', border: '1px solid var(--accent-cyan)', padding: '1rem', borderRadius: '10px', textAlign: 'center', marginBottom: '1.25rem' }}>
+                    <p style={{ fontSize: '0.85rem', color: '#fff', fontWeight: '700', marginBottom: '0.5rem' }}>
+                      Scan QR at Booth #12 or pay cash directly to Texas Butch
+                    </p>
+                    <img 
+                      src={`https://api.qrserver.com/v1/create-qr-code/?size=140x140&color=00d2ff&bgcolor=0a0f1a&data=${encodeURIComponent(`VENMO-KIMSBOOCHERY-TOTAL-${calculateCartTotal().toFixed(2)}`)}`}
+                      alt="Venmo Payment QR"
+                      style={{ width: '130px', height: '130px', borderRadius: '6px', border: '2px solid var(--accent-cyan)', margin: '0 auto 0.5rem auto' }}
+                    />
+                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Scan with Venmo camera or present exact change</div>
+                  </div>
+                ) : null}
+
                 <div style={{ display: 'flex', gap: '12px' }}>
-                  <button className="btn btn-ghost" onClick={clearCart} style={{ flex: '1' }}>Clear</button>
+                  <button className="btn btn-ghost" onClick={clearCart} style={{ flex: '1' }}>Clear Cart</button>
                   <button className="btn btn-primary" onClick={placeOrder} disabled={isPaying} style={{ flex: '2' }}>
-                    {isPaying ? "Processing Payment..." : "Pay & Send to Booth #12"}
+                    {isPaying ? "Processing..." : paymentMode === 'venmo' ? "Confirm Venmo/Cash & Order" : "Pay Card & Send to Booth #12"}
                   </button>
                 </div>
               </div>
