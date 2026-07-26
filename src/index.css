@@ -48,7 +48,9 @@
 }
 
 /* ── Reset & Baseline ─────────────────────────────────────── */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -79,25 +81,56 @@ body {
 
 /* ── Animations ───────────────────────────────────────────── */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes laserScan {
-  0% { top: 5%; }
-  50% { top: 90%; }
-  100% { top: 5%; }
+  0% {
+    top: 5%;
+  }
+
+  50% {
+    top: 90%;
+  }
+
+  100% {
+    top: 5%;
+  }
 }
 
 @keyframes scanPulse {
-  0% { transform: scale(0.98); opacity: 0.85; }
-  50% { transform: scale(1.02); opacity: 1; }
-  100% { transform: scale(0.98); opacity: 0.85; }
+  0% {
+    transform: scale(0.98);
+    opacity: 0.85;
+  }
+
+  50% {
+    transform: scale(1.02);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(0.98);
+    opacity: 0.85;
+  }
 }
 
 @keyframes marquee {
-  0% { transform: translateX(0%); }
-  100% { transform: translateX(-50%); }
+  0% {
+    transform: translateX(0%);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
 }
 
 .animate-fade {
@@ -178,7 +211,8 @@ body {
 /* ── Main Layout ──────────────────────────────────────────── */
 .main-content {
   flex: 1;
-  max-width: 1000px; /* Constrain for premium mobile app view while allowing desktop grid scaling */
+  max-width: 1000px;
+  /* Constrain for premium mobile app view while allowing desktop grid scaling */
   width: 100%;
   margin: 0 auto;
   padding: 1.25rem 1rem 2rem;
@@ -213,6 +247,7 @@ body {
   padding-bottom: 4px;
   scrollbar-width: none;
 }
+
 .category-filter::-webkit-scrollbar {
   display: none;
 }
@@ -559,7 +594,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: rgba(255,255,255,0.02);
+  background: rgba(255, 255, 255, 0.02);
   border: 1px solid var(--border);
   padding: 8px 12px;
   border-radius: var(--radius-md);
@@ -617,7 +652,8 @@ body {
   position: relative;
 }
 
-.pickup-pass::before, .pickup-pass::after {
+.pickup-pass::before,
+.pickup-pass::after {
   content: '';
   position: absolute;
   width: 20px;
@@ -626,8 +662,16 @@ body {
   border-radius: 50%;
   top: calc(50% - 10px);
 }
-.pickup-pass::before { left: -11px; border-right: 1px dashed rgba(6, 182, 212, 0.4); }
-.pickup-pass::after { right: -11px; border-left: 1px dashed rgba(6, 182, 212, 0.4); }
+
+.pickup-pass::before {
+  left: -11px;
+  border-right: 1px dashed rgba(6, 182, 212, 0.4);
+}
+
+.pickup-pass::after {
+  right: -11px;
+  border-left: 1px dashed rgba(6, 182, 212, 0.4);
+}
 
 .pass-barcode {
   background: #fff;
@@ -672,10 +716,37 @@ body {
   border-width: 0;
 }
 
-.corner-tl { top: -2px; left: -2px; border-top-width: 4px; border-left-width: 4px; border-top-left-radius: 8px; }
-.corner-tr { top: -2px; right: -2px; border-top-width: 4px; border-right-width: 4px; border-top-right-radius: 8px; }
-.corner-bl { bottom: -2px; left: -2px; border-bottom-width: 4px; border-left-width: 4px; border-bottom-left-radius: 8px; }
-.corner-br { bottom: -2px; right: -2px; border-bottom-width: 4px; border-right-width: 4px; border-bottom-right-radius: 8px; }
+.corner-tl {
+  top: -2px;
+  left: -2px;
+  border-top-width: 4px;
+  border-left-width: 4px;
+  border-top-left-radius: 8px;
+}
+
+.corner-tr {
+  top: -2px;
+  right: -2px;
+  border-top-width: 4px;
+  border-right-width: 4px;
+  border-top-right-radius: 8px;
+}
+
+.corner-bl {
+  bottom: -2px;
+  left: -2px;
+  border-bottom-width: 4px;
+  border-left-width: 4px;
+  border-bottom-left-radius: 8px;
+}
+
+.corner-br {
+  bottom: -2px;
+  right: -2px;
+  border-bottom-width: 4px;
+  border-right-width: 4px;
+  border-bottom-right-radius: 8px;
+}
 
 .scanner-laser {
   position: absolute;
@@ -716,7 +787,7 @@ body {
   background: linear-gradient(to top, var(--bg-primary), #0e1633);
   border-top-left-radius: var(--radius-xl);
   border-top-right-radius: var(--radius-xl);
-  border-top: 1px solid rgba(255,255,255,0.12);
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
   padding: 1.5rem;
   box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.6);
   max-height: 85dvh;
@@ -726,14 +797,19 @@ body {
 }
 
 @keyframes slideUp {
-  from { transform: translateY(100%); }
-  to { transform: translateY(0); }
+  from {
+    transform: translateY(100%);
+  }
+
+  to {
+    transform: translateY(0);
+  }
 }
 
 .drawer-notch {
   width: 40px;
   height: 4px;
-  background: rgba(255,255,255,0.2);
+  background: rgba(255, 255, 255, 0.2);
   border-radius: var(--radius-full);
   margin: -0.5rem auto 1.25rem;
 }
@@ -742,10 +818,23 @@ body {
 .sticky-active .bottom-nav {
   height: 80px;
 }
-.sticky-active .bottom-tab i { font-size: 1.4rem; }
-.sticky-active .bottom-tab span { font-size: 0.75rem; }
-.sticky-active .product-card { padding: 1.25rem; }
-.sticky-active .btn { padding: 0.95rem 1.75rem; font-size: 1rem; }
+
+.sticky-active .bottom-tab i {
+  font-size: 1.4rem;
+}
+
+.sticky-active .bottom-tab span {
+  font-size: 0.75rem;
+}
+
+.sticky-active .product-card {
+  padding: 1.25rem;
+}
+
+.sticky-active .btn {
+  padding: 0.95rem 1.75rem;
+  font-size: 1rem;
+}
 
 /* ── Mascot Chat Bubble ───────────────────────────────────── */
 .mascot-avatar {
@@ -763,7 +852,7 @@ body {
 
 .chat-bubble {
   background: #101633;
-  border: 1px solid rgba(255,255,255,0.06);
+  border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: var(--radius-lg);
   padding: 0.85rem 1.15rem;
   position: relative;
@@ -778,8 +867,8 @@ body {
   width: 16px;
   height: 16px;
   background: #101633;
-  border-left: 1px solid rgba(255,255,255,0.06);
-  border-bottom: 1px solid rgba(255,255,255,0.06);
+  border-left: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   transform: rotate(45deg);
 }
 
@@ -915,3 +1004,31 @@ body {
   box-shadow: 0 0 5px rgba(6, 182, 212, 0.3);
 }
 
+/* ── Print Styles for Receipts ──────────────────────────────── */
+#printable-receipt-modal {
+  display: none;
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #printable-receipt-modal, #printable-receipt-modal * {
+    visibility: visible;
+  }
+  #printable-receipt-modal {
+    display: block !important;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    max-width: 100%;
+    color: #000 !important;
+    background: #fff !important;
+    padding: 20px;
+    font-family: monospace;
+    font-size: 12px;
+    border: none !important;
+    box-shadow: none !important;
+  }
+}

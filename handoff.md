@@ -1,50 +1,46 @@
-# Project Handoff: AI Flavor Recommender & Firebase Cloud Functions
+# Project Handoff: AI Flavor Recommender, Cloud Functions, & Firestore Invoices
 
-This document summarizes the changes made to the **Kim's Boochery** project to integrate a secure AI-powered flavor recommender system.
+This document summarizes the architecture and features implemented for the **Kim's Boochery** Farmers Market Kiosk.
 
-## Overview
-We integrated the **Google AI Studio (Gemini)** API into the application. To ensure API key security, we migrated the model interaction logic from the frontend React application into a backend **Firebase Cloud Function**. The frontend now safely requests flavor recommendations via a callable Cloud Function.
+## 🌟 Implemented Features
 
----
+### 1. AI Flavor Recommender (Google AI Studio & Cloud Functions)
+- **Frontend Input**: Added a "Tell Butch What You're Craving" search box where users can type anything.
+- **Backend Function (`getFlavorRecommendation`)**: Exposes a secure callable Cloud Function. It keeps your Google AI Studio Gemini API key private.
+- **Dynamic Sorting**: The function returns ordered product IDs based on relevance, sorting the shop menu layout on the fly.
 
-## 🛠️ System Architecture & Changes
+### 2. Live Sales Logging (Firestore)
+- **Database Logging**: After successful checkout processing, the transaction details are instantly logged into a root `/invoices` Firestore collection.
+- **Invoice Structure**: Tracks unique invoice ID, timestamp, breakdown of items, price/quantities, payment method, and customer context.
+- **Firestore Rules**: Updated in `firestore.rules` to allow public document creations during checkout, and public reads for receipt rendering.
 
-### 1. Frontend Modifications (`src/App.jsx`)
-- Added a **"Tell Butch What You're Craving"** input box above the flavor cards.
-- Integrated the Firebase SDK to connect to Cloud Functions using `httpsCallable`.
-- Replaced the direct Google AI Studio SDK call with a call to the remote Cloud Function `getFlavorRecommendation`.
-- The UI dynamically re-sorts the kombucha flavors array according to the recommendation rank returned by the backend.
+### 3. Offline Resilience (Farmers Market Mode)
+- **Persistent Local Cache**: Initialized Firestore with `persistentLocalCache` to handle spotty Farmers Market Wi-Fi.
+- **Queued Operations**: Sales transactions are safely saved locally on the device if internet drops and auto-synced to the cloud database the moment connectivity returns.
 
-### 2. Backend Cloud Functions (`functions/`)
-- Created a new Firebase Functions directory (`functions/`) configured for **Node.js 22**.
-- Implemented `getFlavorRecommendation` in `functions/index.js` utilizing the `@google/generative-ai` SDK.
-- The Cloud Function pulls your Google AI Studio API key securely from local environment variables or Firebase Secrets.
-- Accepts the user's text craving and the list of flavor metadata, and asks Gemini to sort them in order of best relevance.
-
-### 3. Environment Config (`.env` and `.env.example`)
-- Added `VITE_GEMINI_API_KEY` to the project's root `.env.example`.
-- Created `functions/.env` containing the `GEMINI_API_KEY` placeholder. 
+### 4. Printable Receipts
+- **Print Action**: Added a "Print Invoice / Receipt" button to the post-checkout screen.
+- **Media Print CSS**: Embedded `@media print` rules in `index.css` that hide the general website UI and display a clean, ink-saving, black-and-white print receipt layout.
 
 ---
 
 ## 🚀 Deployment Instructions
 
-The project has been successfully deployed and is live:
+The project is live and fully updated:
 * **Hosting URL:** https://kimboocherly.web.app
 * **Firebase Console:** https://console.firebase.google.com/project/kimboocherly/overview
 
-### Deployment Commands Used
-If you need to deploy updates in the future, navigate to the root directory and run:
+To redeploy updates:
 ```powershell
-# 1. Build the frontend
+# Build frontend static assets
 npm run build
 
-# 2. Deploy updates to Hosting & Functions
-& "C:\Users\freem\AppData\Roaming\npm\firebase.cmd" deploy --only hosting,functions --force
+# Deploy updates to Hosting and Firestore
+& "C:\Users\freem\AppData\Roaming\npm\firebase.cmd" deploy --only hosting,firestore --force
 ```
 
 ---
 
-## 🔑 Security & Keys Note
-- **Local Development**: Ensure `functions/.env` is set up with a valid `GEMINI_API_KEY`.
-- **Production**: The function reads `GEMINI_API_KEY` from the functions environment config. For production hardening, this key can optionally be integrated with **Google Cloud Secret Manager** in the Firebase console.
+## 🔑 Environment Secrets Reference
+- **Frontend `.env`**: Needs `VITE_FIREBASE_*` credentials.
+- **Backend `functions/.env`**: Needs `GEMINI_API_KEY` for AI recommendations.

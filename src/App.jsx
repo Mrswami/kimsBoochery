@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
-import { initializeApp } from 'firebase/app'
 import { getFunctions, httpsCallable } from 'firebase/functions'
 import { RecaptchaVerifier, signInWithPhoneNumber, onAuthStateChanged } from 'firebase/auth'
-import { auth } from './config/firebase'
+import app, { auth, db } from './config/firebase'
+import { doc, setDoc, serverTimestamp } from 'firebase/firestore'
 import ApiService, { API_KEYS } from './config/api'
 import menuData from './data/menu_and_inventory.json'
 import './index.css'
@@ -125,21 +125,7 @@ const limitedReleases = [
   }
 ];
 
-// Initialize Firebase for Cloud Functions
-const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID,
-};
-let app;
-try {
-  app = initializeApp(firebaseConfig);
-} catch (e) {
-  // console.warn("Firebase app already initialized", e);
-}
+// Initialize Firebase Functions
 const functions = getFunctions(app);
 
 // Amber Glass Bottle SVG Component
@@ -158,31 +144,31 @@ function AmberBottleSVG({ flavorColor = 'cyan', flavorName = 'Booch' }) {
   return (
     <svg viewBox="0 0 100 220" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
       <ellipse cx="50" cy="205" rx="25" ry="6" fill="rgba(0,0,0,0.3)" />
-      
+
       {/* Neck & Cap holder */}
       <path d="M 35 30 L 65 30 L 60 22 L 60 12 L 40 12 L 40 22 Z" fill="#1e120b" stroke="#3a2215" strokeWidth="1.5" />
-      
+
       {/* Main Glass Body */}
       <path d="M 35 50 C 35 75, 20 80, 20 100 L 20 190 C 20 205, 80 205, 80 190 L 80 100 C 80 80, 65 75, 65 50 Z" fill="#5c3412" stroke="#2c1707" strokeWidth="2.5" />
-      
+
       {/* Glass Highlight */}
       <path d="M 23 105 L 23 185 C 23 194, 27 197, 30 197 C 26 194, 26 105, 33 92 C 36 86, 45 81, 48 56 C 48 56, 37 76, 23 105" fill="rgba(255,255,255,0.15)" />
-      
+
       {/* Label Shape */}
       <path d="M 22 108 L 78 108 L 78 168 L 22 168 Z" fill="#fcf9f2" stroke="#e6decb" strokeWidth="1" />
       <rect x="25" y="111" width="50" height="54" fill={getHexColor(flavorColor)} opacity="0.14" rx="2" />
-      
+
       {/* Branding Text */}
       <text x="50" y="122" fontSize="5" fontWeight="900" fill="#2d1708" textAnchor="middle" letterSpacing="0.3" fontFamily="sans-serif">KIM'S BOOCHERY</text>
       <text x="50" y="128" fontSize="3.8" fontWeight="700" fill="#64748b" textAnchor="middle" letterSpacing="0.1" fontFamily="sans-serif">CRAFT KOMBUCHA</text>
-      
+
       {/* Flavor Title */}
       <text x="50" y="146" fontSize="7.5" fontWeight="800" fill={getHexColor(flavorColor)} textAnchor="middle" fontFamily="sans-serif">{flavorName.toUpperCase()}</text>
-      
+
       {/* Badge/Seal */}
       <circle cx="50" cy="157" r="4.5" fill="#f59e0b" />
       <polygon points="50,154 51.2,156.5 53.8,156.5 51.8,157.8 52.5,160.3 50,158.8 47.5,160.3 48.2,157.8 46.2,156.5 48.8,156.5" fill="#fff" />
-      
+
       {/* Bottle Cap */}
       <rect x="38" y="6" width="24" height="6" fill="#171717" rx="1.2" />
       <line x1="41" y1="12" x2="41" y2="6" stroke="#2e2e2e" strokeWidth="0.8" />
@@ -240,69 +226,69 @@ function KimmySVG({ pose = 'welcome' }) {
         <path d="M 20 50 C 20 25, 70 25, 70 50 C 70 65, 20 65, 20 50 Z" fill="#d8b4fe" stroke="#8b5cf6" strokeWidth="2.5" />
         <path d="M 30 32 C 40 28, 50 28, 60 32" fill="none" stroke="#f3e8ff" strokeWidth="1.5" />
         <path d="M 26 40 C 36 36, 46 36, 62 40" fill="none" stroke="#f3e8ff" strokeWidth="1.5" />
-        
+
         {/* Grumpy Head pointing right */}
         <path d="M 62 45 L 80 43 C 83 42, 85 46, 80 49 L 65 52 Z" fill="#f472b6" stroke="#db2777" strokeWidth="1.5" />
         <path d="M 60 45 L 53 38 C 51 36, 53 35, 55 37 Z" fill="#db2777" />
-        
+
         {/* Half-closed sassy eye */}
         <path d="M 68 44 Q 71 42, 74 44" stroke="#000" strokeWidth="1.5" fill="none" />
         <circle cx="71.5" cy="46.5" r="1.5" fill="#000" />
         <circle cx="70" cy="50" r="2.5" fill="#f43f5e" opacity="0.4" /> {/* Blush */}
-        
+
         {/* Sassy Crossed Arms */}
         <path d="M 40 52 Q 52 56, 62 50" fill="none" stroke="#f472b6" strokeWidth="3.5" strokeLinecap="round" />
         <path d="M 42 49 Q 32 53, 30 49" fill="none" stroke="#f472b6" strokeWidth="3.5" strokeLinecap="round" />
-        
+
         {/* Tail up in the air */}
         <path d="M 20 50 Q 8 40, 12 32" fill="none" stroke="#8b5cf6" strokeWidth="2.5" />
-        
+
         {/* Feet */}
         <rect x="30" y="58" width="8" height="6" rx="2" fill="#f472b6" />
         <rect x="52" y="58" width="8" height="6" rx="2" fill="#f472b6" />
       </svg>
     );
   }
-  
+
   if (pose === 'sipping') {
     return (
       <svg viewBox="0 0 100 100" width="100" height="100" style={{ display: 'block', margin: '0 auto' }}>
         {/* Shell */}
         <path d="M 25 50 C 25 25, 75 25, 75 50 C 75 65, 25 65, 25 50 Z" fill="#d8b4fe" stroke="#8b5cf6" strokeWidth="2.5" />
         <path d="M 35 32 C 45 28, 55 28, 65 32" fill="none" stroke="#f3e8ff" strokeWidth="1.5" />
-        
+
         {/* Head tilted down to straw */}
         <path d="M 64 48 L 78 54 C 80 55, 78 58, 74 57 L 65 52 Z" fill="#f472b6" stroke="#db2777" strokeWidth="1.5" />
         <circle cx="70" cy="51" r="2" fill="#000" />
         <circle cx="69" cy="51" r="0.6" fill="#fff" />
-        
+
         {/* Straw and Bottle */}
         <line x1="75" y1="56" x2="80" y2="67" stroke="#10b981" strokeWidth="2.5" />
         <rect x="76" y="67" width="10" height="17" rx="1.5" fill="#78350f" stroke="#451a03" strokeWidth="1" />
         <rect x="79" y="64" width="4" height="3" fill="#171717" />
         <rect x="77" y="71" width="8" height="9" fill="#fef08a" opacity="0.9" /> {/* Yellow label */}
-        
+
         {/* Drinking Bubbles/Slurp text */}
         <circle cx="88" cy="48" r="1.5" fill="#06b6d4" opacity="0.6" />
         <circle cx="92" cy="40" r="2.5" fill="#06b6d4" opacity="0.4" />
         <text x="89" y="60" fontSize="4.5" fill="#06b6d4" fontWeight="800" fontFamily="sans-serif">slurp</text>
-        
+
         {/* Puffed Cheek */}
         <ellipse cx="67" cy="52" rx="4.5" ry="3.8" fill="#f472b6" />
-        
+
         {/* Arm holding straw */}
         <path d="M 45 54 Q 65 62, 75 64" fill="none" stroke="#f472b6" strokeWidth="3" strokeLinecap="round" />
-        
+
         {/* Tail */}
         <path d="M 25 52 Q 12 50, 16 58" fill="none" stroke="#8b5cf6" strokeWidth="2" />
-        
+
         {/* Feet */}
         <rect x="35" y="58" width="8" height="6" rx="2" fill="#f472b6" />
         <rect x="57" y="58" width="8" height="6" rx="2" fill="#f472b6" />
       </svg>
     );
   }
-  
+
   if (pose === 'rolled') {
     return (
       <svg viewBox="0 0 100 100" width="100" height="100" style={{ display: 'block', margin: '0 auto' }}>
@@ -312,7 +298,7 @@ function KimmySVG({ pose = 'welcome' }) {
         <circle cx="50" cy="50" r="18" fill="none" stroke="#f3e8ff" strokeWidth="2" strokeDasharray="8,4" />
         <path d="M 50 20 Q 20 40, 50 80" fill="none" stroke="#8b5cf6" strokeWidth="2" />
         <path d="M 50 20 Q 80 40, 50 80" fill="none" stroke="#8b5cf6" strokeWidth="2" />
-        
+
         {/* Snoozing Zzz */}
         <text x="76" y="32" fontSize="9" fill="#c084fc" fontWeight="bold" fontFamily="sans-serif" opacity="0.8">Z</text>
         <text x="83" y="24" fontSize="6.5" fill="#c084fc" fontFamily="sans-serif" opacity="0.6">z</text>
@@ -328,24 +314,24 @@ function KimmySVG({ pose = 'welcome' }) {
       <path d="M 25 50 C 25 25, 75 25, 75 50 C 75 65, 25 65, 25 50 Z" fill="#d8b4fe" stroke="#8b5cf6" strokeWidth="2.5" />
       <path d="M 35 32 C 45 28, 55 28, 65 32" fill="none" stroke="#f3e8ff" strokeWidth="1.5" />
       <path d="M 30 40 C 45 35, 55 35, 70 40" fill="none" stroke="#f3e8ff" strokeWidth="1.5" />
-      
+
       {/* Friendly Head */}
       <path d="M 68 45 L 82 48 C 85 49, 85 53, 80 55 L 70 54 Z" fill="#f472b6" stroke="#db2777" strokeWidth="1.5" />
       <path d="M 69 45 L 72 35 C 73 33, 75 33, 75 36 Z" fill="#db2777" />
       <path d="M 66 46 L 68 37 C 69 35, 71 35, 71 38 Z" fill="#db2777" />
-      
+
       {/* Happy eye */}
       <circle cx="74.5" cy="48.5" r="2.2" fill="#000" />
       <circle cx="75.5" cy="47.5" r="0.7" fill="#fff" />
       <circle cx="72" cy="51" r="2.5" fill="#f43f5e" opacity="0.5" /> {/* Blush */}
-      
+
       {/* Arms welcoming */}
       <path d="M 45 54 Q 60 62, 70 60" fill="none" stroke="#f472b6" strokeWidth="3.2" strokeLinecap="round" />
       <path d="M 35 54 Q 20 62, 10 60" fill="none" stroke="#f472b6" strokeWidth="3.2" strokeLinecap="round" />
-      
+
       {/* Tail */}
       <path d="M 25 52 Q 10 50, 14 58" fill="none" stroke="#8b5cf6" strokeWidth="2" />
-      
+
       {/* Feet */}
       <rect x="35" y="58" width="8" height="6" rx="2" fill="#f472b6" />
       <rect x="57" y="58" width="8" height="6" rx="2" fill="#f472b6" />
@@ -544,7 +530,7 @@ function App() {
   // Generate Catalog Array mapping categories dynamically
   const generateCatalog = () => {
     const catalog = [];
-    
+
     // Add fresh tap cups
     baseFlavors.forEach(f => {
       catalog.push({
@@ -688,6 +674,33 @@ function App() {
     }, 0);
   };
 
+  const logInvoiceToFirestore = async (orderId, cartData, totalAmount) => {
+    try {
+      const invoiceRef = doc(db, 'invoices', orderId);
+      const itemsList = Object.entries(cartData).map(([id, qty]) => {
+        const product = catalog.find(p => p.id === id);
+        return {
+          id,
+          name: product ? product.name : id,
+          price: product ? product.rawPrice : 0,
+          quantity: qty
+        };
+      });
+
+      await setDoc(invoiceRef, {
+        invoiceId: orderId,
+        timestamp: serverTimestamp(),
+        items: itemsList,
+        total: parseFloat(totalAmount),
+        paymentMode: paymentMode,
+        customerPhone: currentUser ? currentUser.phoneNumber : 'Guest Customer'
+      });
+      console.log("Invoice successfully logged to Firestore:", orderId);
+    } catch (e) {
+      console.error("Error writing invoice to Firestore:", e);
+    }
+  };
+
   const handleCheckout = () => {
     if (totalCartCount() === 0) return;
     setIsProcessingPayment(true);
@@ -711,9 +724,13 @@ function App() {
         clearInterval(timer);
         setIsProcessingPayment(false);
         const orderId = `KB-${Math.floor(100000 + Math.random() * 900000)}`;
+        const totalVal = getCartTotal().toFixed(2);
+        
+        logInvoiceToFirestore(orderId, cart, totalVal);
+
         setOrderPassDetails({
           id: orderId,
-          total: getCartTotal().toFixed(2),
+          total: totalVal,
           items: { ...cart },
           time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
           phone: currentUser ? currentUser.phoneNumber : 'Guest Customer'
@@ -741,10 +758,10 @@ function App() {
   const triggerCodeScan = (code) => {
     // Check in standard catalog + limited releases
     const cleanedCode = code.trim().toUpperCase();
-    
+
     // Find matching flavor or limited release
     let matchingProduct = catalog.find(p => p.code === cleanedCode);
-    
+
     if (!matchingProduct) {
       // Check limited release array
       const matchingLimited = limitedReleases.find(l => l.code === cleanedCode);
@@ -786,7 +803,7 @@ function App() {
         cravingInput,
         flavors: baseFlavors.map(f => ({ id: f.id, name: f.name, desc: f.desc, ingredients: f.ingredients }))
       };
-      
+
       const result = await getFlavorRecommendation(payload);
       const sortedIds = result.data.sortedIds;
 
@@ -888,7 +905,7 @@ function App() {
   const handleRoleChange = (targetRole) => {
     setRole(targetRole);
     setShowRoleModal(false);
-    
+
     // Smoothly update URL query param so developers can refresh without losing mode
     const url = new URL(window.location);
     if (targetRole === 'vendor') {
@@ -913,10 +930,10 @@ function App() {
       {/* ── Titlebar Header ──────────────────────────── */}
       <header className="titlebar">
         <div className="titlebar-logo" onClick={() => handleRoleChange(role === 'customer' ? 'vendor' : 'customer')}>
-          <img 
-            src="/logo.png" 
-            alt="Kim's Boochery Logo" 
-            style={{ width: '38px', height: '38px', borderRadius: '50%', border: '1.5px solid var(--accent-cyan)' }} 
+          <img
+            src="/logo.png"
+            alt="Kim's Boochery Logo"
+            style={{ width: '38px', height: '38px', borderRadius: '50%', border: '1.5px solid var(--accent-cyan)' }}
           />
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <span className="logo-text">Kim's Boochery</span>
@@ -931,9 +948,9 @@ function App() {
               <span>{currentUser.phoneNumber.substring(currentUser.phoneNumber.length - 4)}</span>
             </div>
           )}
-          
+
           {/* Active Role toggle indicator */}
-          <div 
+          <div
             className={`role-badge ${role === 'vendor' ? 'vendor' : ''}`}
             onClick={() => setShowRoleModal(true)}
           >
@@ -941,8 +958,8 @@ function App() {
             {role === 'vendor' ? 'Vendor Mode' : 'Customer View'}
           </div>
 
-          <button 
-            className={`btn btn-sm btn-ghost`} 
+          <button
+            className={`btn btn-sm btn-ghost`}
             onClick={() => setStickyHandsMode(!stickyHandsMode)}
             style={{ padding: '4px 8px', borderRadius: '15px' }}
           >
@@ -963,21 +980,21 @@ function App() {
           overflowX: 'auto',
           zIndex: 900
         }}>
-          <button 
+          <button
             className={`btn btn-sm ${vendorView === 'dashboard' ? 'btn-primary' : 'btn-ghost'}`}
             style={{ borderRadius: '6px', padding: '3px 8px' }}
             onClick={() => setVendorView('dashboard')}
           >
             <i className="fa-solid fa-chart-line" /> Dashboard
           </button>
-          <button 
+          <button
             className={`btn btn-sm ${vendorView === 'api-audit' ? 'btn-primary' : 'btn-ghost'}`}
             style={{ borderRadius: '6px', padding: '3px 8px' }}
             onClick={() => setVendorView('api-audit')}
           >
             <i className="fa-solid fa-key" /> API Keys Audit
           </button>
-          <button 
+          <button
             className={`btn btn-sm ${vendorView === 'rentals' ? 'btn-primary' : 'btn-ghost'}`}
             style={{ borderRadius: '6px', padding: '3px 8px' }}
             onClick={() => setVendorView('rentals')}
@@ -989,7 +1006,7 @@ function App() {
 
       {/* ── Main App Body ────────────────────────────── */}
       <main className="main-content">
-        
+
         {/* Render Vendor View if selected */}
         {role === 'vendor' && vendorView === 'dashboard' && (
           <div className="animate-fade" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', marginBottom: '1.5rem' }}>
@@ -1025,7 +1042,7 @@ function App() {
               <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
                 Scan this QR code to load the exact mobile customer storefront on your iPhone or Galaxy device.
               </p>
-              
+
               <div style={{
                 background: '#fff',
                 padding: '12px',
@@ -1034,8 +1051,8 @@ function App() {
                 border: '3px solid var(--accent-violet)',
                 boxShadow: '0 8px 24px rgba(139, 92, 246, 0.15)'
               }}>
-                <img 
-                  src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&color=0f172a&bgcolor=ffffff&data=${encodeURIComponent(window.location.origin + '?role=customer')}`} 
+                <img
+                  src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&color=0f172a&bgcolor=ffffff&data=${encodeURIComponent(window.location.origin + '?role=customer')}`}
                   alt="QA Test QR Link"
                   style={{ width: '130px', height: '130px', display: 'block' }}
                 />
@@ -1122,14 +1139,14 @@ function App() {
                     <span style={{ fontSize: '0.85rem', fontWeight: '700', color: '#fff' }}>{item.name}</span>
                     <p style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>${item.price} per {item.unit} • {item.available} left</p>
                   </div>
-                  
+
                   <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                     <div className="counter-box">
                       <button className="counter-btn" onClick={() => setStorageQty(prev => ({ ...prev, [item.id]: Math.max(1, prev[item.id] - 1) }))}>-</button>
                       <span className="counter-val">{storageQty[item.id]}</span>
                       <button className="counter-btn" onClick={() => setStorageQty(prev => ({ ...prev, [item.id]: Math.min(item.available, prev[item.id] + 1) }))}>+</button>
                     </div>
-                    
+
                     <button className="btn btn-sm btn-primary" style={{ padding: '6px 10px' }} onClick={() => addStorageBooking(item.id)}>
                       Rent
                     </button>
@@ -1159,7 +1176,7 @@ function App() {
         {/* ── Tab View 1: Tap Menu ────────────────────────── */}
         {activeTab === 'menu' && (
           <div className="animate-fade">
-            
+
             {/* Filters Bar - FIRST thing customer sees */}
             <div className="category-filter" style={{ marginTop: '0.2rem' }}>
               {[
@@ -1169,8 +1186,8 @@ function App() {
                 { id: 'can4', label: 'Can 4-Packs' },
                 { id: 'merch', label: 'Merchandise' }
               ].map(cat => (
-                <button 
-                  key={cat.id} 
+                <button
+                  key={cat.id}
                   className={`category-tab ${categoryFilter === cat.id ? 'active' : ''}`}
                   onClick={() => setCategoryFilter(cat.id)}
                 >
@@ -1185,12 +1202,12 @@ function App() {
                 const cartQty = cart[product.id] || 0;
                 return (
                   <div key={product.id} className="product-card animate-fade">
-                    
+
                     {/* Bottle or Merchandise Visual */}
                     <div className="bottle-visual-wrapper">
                       {product.category === 'merch' ? (
                         product.id === 'merch-tee' ? <ShirtSVG /> :
-                        product.id === 'merch-hat' ? <HatSVG /> : <StickerSVG />
+                          product.id === 'merch-hat' ? <HatSVG /> : <StickerSVG />
                       ) : (
                         <AmberBottleSVG flavorColor={product.color} flavorName={product.baseId} />
                       )}
@@ -1264,7 +1281,7 @@ function App() {
 
             {/* Separator and Kimmy's Corner at the bottom as an afterthought */}
             <hr style={{ border: 'none', borderTop: '1px solid var(--border)', margin: '2.5rem 0 1.5rem' }} />
-            
+
             <div className="card animate-fade" style={{ borderLeft: '4px solid var(--accent-violet)', background: 'rgba(25, 15, 45, 0.4)' }}>
               <div style={{ display: 'flex', gap: '1.25rem', alignItems: 'center', flexWrap: 'wrap' }}>
                 <div style={{ width: '80px', height: '80px', flexShrink: 0 }}>
@@ -1275,14 +1292,14 @@ function App() {
                     <span style={{ fontSize: '0.65rem', fontWeight: '800', color: 'var(--accent-violet)', letterSpacing: '0.05em' }}>KIMMY THE ARMADILLO</span>
                     <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>Mascot Pose Controller</span>
                   </div>
-                  
-                  <div style={{ 
-                    background: '#090d16', 
-                    border: '1px solid var(--border)', 
-                    borderRadius: '8px', 
-                    padding: '8px 12px', 
-                    fontSize: '0.78rem', 
-                    color: '#fff', 
+
+                  <div style={{
+                    background: '#090d16',
+                    border: '1px solid var(--border)',
+                    borderRadius: '8px',
+                    padding: '8px 12px',
+                    fontSize: '0.78rem',
+                    color: '#fff',
                     fontStyle: 'italic',
                     marginBottom: '10px',
                     minHeight: '44px',
@@ -1299,8 +1316,8 @@ function App() {
                       { id: 'sipping', label: 'Sipping 🥤' },
                       { id: 'rolled', label: 'Sleepy 😴' }
                     ].map(p => (
-                      <button 
-                        key={p.id} 
+                      <button
+                        key={p.id}
                         className={`btn btn-sm ${kimmyPose === p.id ? 'btn-primary' : 'btn-ghost'}`}
                         style={{ padding: '3px 8px', fontSize: '0.65rem', borderRadius: '15px' }}
                         onClick={() => setKimmyPose(p.id)}
@@ -1319,7 +1336,7 @@ function App() {
         {/* ── Tab View 2: Basket & Checkout ──────────────── */}
         {activeTab === 'checkout' && (
           <div className="animate-fade">
-            
+
             {orderStatus === null && (
               <div className="card">
                 <h3 style={{ fontSize: '1.1rem', color: '#fff', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -1348,7 +1365,7 @@ function App() {
 
                         {authStatus === 'idle' || authStatus === 'sending' ? (
                           <form onSubmit={sendVerificationSms} className="auth-input-group">
-                            <input 
+                            <input
                               type="tel"
                               className="auth-input"
                               placeholder="+1 (512) 555-0199"
@@ -1362,7 +1379,7 @@ function App() {
                           </form>
                         ) : (
                           <form onSubmit={confirmOtpCode} className="auth-input-group">
-                            <input 
+                            <input
                               type="text"
                               className="auth-input"
                               placeholder="Enter 6-digit SMS code"
@@ -1436,7 +1453,7 @@ function App() {
 
                     {/* Payment selector */}
                     <h4 style={{ fontSize: '0.85rem', color: '#fff', marginBottom: '0.5rem' }}>Select Payment Method</h4>
-                    
+
                     <div className="payment-method-grid">
                       <div className={`payment-method-card ${paymentMode === 'apple-pay' ? 'active' : ''}`} onClick={() => setPaymentMode('apple-pay')}>
                         <i className="fa-brands fa-apple" />
@@ -1518,6 +1535,58 @@ function App() {
                       <span style={{ color: 'var(--accent-cyan)', fontWeight: '800' }}>${orderPassDetails.total}</span>
                     </div>
                   </div>
+
+                  <button 
+                    className="btn btn-primary animate-fade" 
+                    style={{ width: '100%', marginTop: '10px', background: 'var(--accent-cyan)', color: '#050814', fontWeight: '800', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }} 
+                    onClick={() => window.print()}
+                  >
+                    <i className="fa-solid fa-print" /> Print Invoice / Receipt
+                  </button>
+                </div>
+
+                {/* Hidden printable receipt wrapper */}
+                <div id="printable-receipt-modal">
+                  <div style={{ textAlign: 'center', borderBottom: '1px dashed #000', paddingBottom: '10px', marginBottom: '10px' }}>
+                    <h2 style={{ margin: '0 0 5px 0' }}>KIM'S BOOCHERY</h2>
+                    <p style={{ margin: '0 0 5px 0' }}>Mueller Farmers Market, Booth #12</p>
+                    <p style={{ margin: '0', fontWeight: 'bold' }}>INVOICE / SALES RECEIPT</p>
+                  </div>
+                  <div style={{ marginBottom: '10px', fontSize: '10px', display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                    <div><strong>Invoice ID:</strong> {orderPassDetails.id}</div>
+                    <div><strong>Date:</strong> {new Date().toLocaleDateString()}</div>
+                    <div><strong>Time:</strong> {orderPassDetails.time}</div>
+                    <div><strong>Payment Method:</strong> {paymentMode.replace('-', ' ').toUpperCase()}</div>
+                    <div><strong>Customer Ref:</strong> {orderPassDetails.phone}</div>
+                  </div>
+                  <table style={{ width: '100%', borderCollapse: 'collapse', borderBottom: '1px dashed #000', paddingBottom: '5px', marginBottom: '10px', fontSize: '10px' }}>
+                    <thead>
+                      <tr style={{ borderBottom: '1px solid #000' }}>
+                        <th style={{ textAlign: 'left', paddingBottom: '4px' }}>Item</th>
+                        <th style={{ textAlign: 'center', paddingBottom: '4px' }}>Qty</th>
+                        <th style={{ textAlign: 'right', paddingBottom: '4px' }}>Price</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {Object.entries(orderPassDetails.items).map(([itemId, qty]) => {
+                        const product = catalog.find(p => p.id === itemId);
+                        return (
+                          <tr key={itemId}>
+                            <td style={{ padding: '3px 0' }}>{product ? product.name : itemId}</td>
+                            <td style={{ textAlign: 'center', padding: '3px 0' }}>{qty}</td>
+                            <td style={{ textAlign: 'right', padding: '3px 0' }}>${((product ? product.rawPrice : 0) * qty).toFixed(2)}</td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 'bold', fontSize: '12px' }}>
+                    <span>TOTAL:</span>
+                    <span>${orderPassDetails.total}</span>
+                  </div>
+                  <div style={{ textAlign: 'center', marginTop: '20px', fontSize: '9px', fontStyle: 'italic', borderTop: '1px dashed #000', paddingTop: '10px' }}>
+                    Thank you for supporting local kombucha!<br />See you at Mueller Sunday Market Booth #12!
+                  </div>
                 </div>
 
                 <div className="card text-center" style={{ textAlign: 'center' }}>
@@ -1525,7 +1594,7 @@ function App() {
                   <p style={{ fontSize: '0.72rem', color: 'var(--text-secondary)', marginBottom: '0.85rem' }}>
                     Straight past the acoustic stage. Look for the large cartoonish armadillo sign.
                   </p>
-                  
+
                   <button className="btn btn-ghost" style={{ width: '100%' }} onClick={resetOrder}>
                     Start New Order
                   </button>
@@ -1539,7 +1608,7 @@ function App() {
         {/* ── Tab View 3: Flavor Scan ─────────────────────── */}
         {activeTab === 'flavorscan' && (
           <div className="animate-fade" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-            
+
             <div className="card">
               <h3 style={{ fontSize: '1.1rem', color: '#fff', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <i className="fa-solid fa-camera" style={{ color: 'var(--accent-cyan)' }} /> Camera cap & Tap scan
@@ -1551,12 +1620,12 @@ function App() {
               {/* Viewfinder simulation */}
               <div className="scanner-container">
                 {isCameraGranted && scannerActive ? (
-                  <video 
+                  <video
                     ref={videoRef}
-                    id="viewfinder-stream" 
-                    autoPlay 
-                    playsInline 
-                    muted 
+                    id="viewfinder-stream"
+                    autoPlay
+                    playsInline
+                    muted
                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                   />
                 ) : (
@@ -1588,9 +1657,9 @@ function App() {
               </div>
 
               <div style={{ display: 'flex', gap: '8px', marginTop: '1rem' }}>
-                <button 
-                  className={`btn ${scannerActive ? 'btn-ghost' : 'btn-primary'}`} 
-                  style={{ flex: 1 }} 
+                <button
+                  className={`btn ${scannerActive ? 'btn-ghost' : 'btn-primary'}`}
+                  style={{ flex: 1 }}
                   onClick={() => setScannerActive(!scannerActive)}
                 >
                   <i className={`fa-solid ${scannerActive ? 'fa-video-slash' : 'fa-video'}`} />
@@ -1615,9 +1684,9 @@ function App() {
                   { code: 'DRAGON11', name: 'Dragon (Ltd)' },
                   { code: 'ZING12', name: 'Ginger (Ltd)' }
                 ].map(item => (
-                  <button 
-                    key={item.code} 
-                    className="btn btn-sm btn-ghost" 
+                  <button
+                    key={item.code}
+                    className="btn btn-sm btn-ghost"
                     style={{ fontSize: '0.65rem', padding: '6px 4px', borderRadius: '6px' }}
                     onClick={() => triggerCodeScan(item.code)}
                   >
@@ -1627,7 +1696,7 @@ function App() {
               </div>
 
               <div style={{ display: 'flex', gap: '8px', marginTop: '1rem', borderTop: '1px solid var(--border)', paddingTop: '1rem' }}>
-                <input 
+                <input
                   type="text"
                   placeholder="Enter manual cap code (e.g. SAD01)"
                   value={scanCodeText}
@@ -1656,7 +1725,7 @@ function App() {
         {/* ── Tab View 4: Kimmy Mascot ─────────────── */}
         {activeTab === 'armadillo' && (
           <div className="animate-fade" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-            
+
             {/* Mascot advice */}
             <div className="card" style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
               <div className="mascot-avatar">
@@ -1666,8 +1735,8 @@ function App() {
               <div className="chat-bubble">
                 <div style={{ fontSize: '0.62rem', fontWeight: '800', color: 'var(--accent-violet)', letterSpacing: '0.05em', marginBottom: '2px' }}>KIMMY THE ARMADILLO</div>
                 <p style={{ fontSize: '0.82rem', color: '#fff', lineHeight: '1.4' }}>
-                  {kimmyChatLog[kimmyChatLog.length - 1].sender === 'kimmy' 
-                    ? kimmyChatLog[kimmyChatLog.length - 1].text 
+                  {kimmyChatLog[kimmyChatLog.length - 1].sender === 'kimmy'
+                    ? kimmyChatLog[kimmyChatLog.length - 1].text
                     : "Grunt... I'm thinking..."}
                 </p>
               </div>
@@ -1686,8 +1755,8 @@ function App() {
                   { id: 'sipping', label: 'Sipping 🥤' },
                   { id: 'rolled', label: 'Sleepy 😴' }
                 ].map(p => (
-                  <button 
-                    key={p.id} 
+                  <button
+                    key={p.id}
                     className={`btn btn-sm ${kimmyPose === p.id ? 'btn-primary' : 'btn-ghost'}`}
                     onClick={() => setKimmyPose(p.id)}
                   >
@@ -1739,8 +1808,8 @@ function App() {
               </div>
 
               <form onSubmit={handleKimmyChat} style={{ display: 'flex', gap: '8px' }}>
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   value={kimmyChatInput}
                   onChange={(e) => setKimmyChatInput(e.target.value)}
                   placeholder="Ask Kimmy (e.g. Do you have gluten free?)"
@@ -1802,7 +1871,7 @@ function App() {
 
       {/* ── Strict 4-Tab Mobile Navigation Bar ────────── */}
       <nav className="bottom-nav">
-        <button 
+        <button
           className={`bottom-tab ${activeTab === 'menu' ? 'active' : ''}`}
           onClick={() => setActiveTab('menu')}
         >
@@ -1810,7 +1879,7 @@ function App() {
           <span>Taps</span>
         </button>
 
-        <button 
+        <button
           className={`bottom-tab ${activeTab === 'checkout' ? 'active' : ''}`}
           onClick={() => setActiveTab('checkout')}
         >
@@ -1821,7 +1890,7 @@ function App() {
           )}
         </button>
 
-        <button 
+        <button
           className={`bottom-tab ${activeTab === 'flavorscan' ? 'active' : ''}`}
           onClick={() => setActiveTab('flavorscan')}
         >
@@ -1829,7 +1898,7 @@ function App() {
           <span>Flavor Scan</span>
         </button>
 
-        <button 
+        <button
           className={`bottom-tab ${activeTab === 'armadillo' ? 'active' : ''}`}
           onClick={() => setActiveTab('armadillo')}
         >
@@ -1848,7 +1917,7 @@ function App() {
         <div className="bottom-drawer-backdrop" onClick={() => setScannedProduct(null)}>
           <div className="bottom-drawer" onClick={(e) => e.stopPropagation()}>
             <div className="drawer-notch" onClick={() => setScannedProduct(null)} />
-            
+
             <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', marginBottom: '1.25rem' }}>
               <div style={{ width: '60px', height: '110px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '6px', overflow: 'hidden' }}>
                 <AmberBottleSVG flavorColor={scannedProduct.color} flavorName={scannedProduct.baseId || 'Ltd'} />
@@ -1859,7 +1928,7 @@ function App() {
                   <span style={{ fontSize: '0.62rem', fontWeight: '800', background: 'var(--accent-amber)', color: '#000', padding: '1px 5px', borderRadius: '4px', display: 'inline-block', marginBottom: '2px' }}>LIMITED RELEASE CAP</span>
                 )}
                 <h3 style={{ fontSize: '1.2rem', color: '#fff' }}>{scannedProduct.name}</h3>
-                
+
                 <div style={{ display: 'flex', gap: '8px', alignItems: 'center', fontSize: '0.72rem', color: 'var(--accent-cyan)', fontWeight: '700', marginTop: '2px' }}>
                   <span>{scannedProduct.price}</span>
                   <span style={{ color: 'var(--text-muted)' }}>•</span>
@@ -1889,8 +1958,8 @@ function App() {
               <button className="btn btn-ghost" style={{ flex: 1 }} onClick={() => setScannedProduct(null)}>
                 Close
               </button>
-              <button 
-                className="btn btn-primary" 
+              <button
+                className="btn btn-primary"
                 style={{ flex: 2 }}
                 onClick={() => {
                   addToCart(scannedProduct.id);
@@ -1919,15 +1988,15 @@ function App() {
             </p>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              <button 
-                className={`btn ${role === 'customer' ? 'btn-primary' : 'btn-ghost'}`} 
+              <button
+                className={`btn ${role === 'customer' ? 'btn-primary' : 'btn-ghost'}`}
                 onClick={() => handleRoleChange('customer')}
                 style={{ justifyContent: 'center' }}
               >
                 <i className="fa-solid fa-user" /> Customer Storefront View
               </button>
-              <button 
-                className={`btn ${role === 'vendor' ? 'btn-primary' : 'btn-ghost'}`} 
+              <button
+                className={`btn ${role === 'vendor' ? 'btn-primary' : 'btn-ghost'}`}
                 onClick={() => handleRoleChange('vendor')}
                 style={{ justifyContent: 'center' }}
               >
@@ -1935,8 +2004,8 @@ function App() {
               </button>
             </div>
 
-            <button 
-              className="btn btn-ghost btn-sm" 
+            <button
+              className="btn btn-ghost btn-sm"
               style={{ marginTop: '1.25rem', width: '100%' }}
               onClick={() => setShowRoleModal(false)}
             >
