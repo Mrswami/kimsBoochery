@@ -45,3 +45,48 @@ Return ONLY a valid JSON array of flavor IDs (strings). Do not include any markd
     throw new HttpsError('internal', 'Error generating recommendation');
   }
 });
+
+const Stripe = require("stripe");
+
+exports.createStripeCheckoutSession = onCall({
+  cors: true,
+  maxInstances: 10
+}, async (request) => {
+  const data = request.data;
+  const items = data.items;
+  const successUrl = data.successUrl;
+  const cancelUrl = data.cancelUrl;
+
+  const stripeKey = process.env.STRIPE_SECRET_KEY || process.env.VITE_STRIPE_SECRET_KEY;
+  if (!stripeKey) {
+    throw new HttpsError("internal", "Stripe API Secret Key is not configured on the server.");
+  }
+
+  const stripe = new Stripe(stripeKey);
+
+  try {
+    const lineItems = items.map(item => ({
+      price_data: {
+        currency: "usd",
+        product_data: {
+          name: item.name,
+        },
+        unit_amount: Math.round(item.price * 100),
+      },
+      quantity: item.quantity,
+    }));
+
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      line_items: lineItems,
+      mode: "payment",
+      success_url: successUrl,
+      cancel_url: cancelUrl,
+    });
+
+    return { url: session.url, sessionId: session.id };
+  } catch (err) {
+    console.error("Stripe Session Error:", err);
+    throw new HttpsError("internal", err.message || "Failed to create Stripe Checkout session");
+  }
+});

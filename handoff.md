@@ -22,6 +22,11 @@ This document summarizes the architecture and features implemented for the **Kim
 - **Print Action**: Added a "Print Invoice / Receipt" button to the post-checkout screen.
 - **Media Print CSS**: Embedded `@media print` rules in `index.css` that hide the general website UI and display a clean, ink-saving, black-and-white print receipt layout.
 
+### 5. Merchant POS Panel (RBAC) & Stripe Checkout
+- **Role Detection**: Toggles into a merchant POS screen when in "Vendor" view.
+- **POS Actions**: Enables Cash Register, EBT/SNAP, Venmo QR display, Cart dynamic QR code sharing (customer scans, load cart, pays on their phone), and direct Stripe Checkout redirects for Tap-to-Pay.
+- **Success Redirect Handler**: Parses Stripe query returns to automatically record invoices, clear carts, and pop up print-friendly customer receipts.
+
 ---
 
 ## 🚀 Deployment Instructions
@@ -35,12 +40,14 @@ To redeploy updates:
 # Build frontend static assets
 npm run build
 
-# Deploy updates to Hosting and Firestore
-& "C:\Users\freem\AppData\Roaming\npm\firebase.cmd" deploy --only hosting,firestore --force
+# Deploy updates to Hosting, Firestore, and Functions
+& "C:\Users\freem\AppData\Roaming\npm\firebase.cmd" deploy --only hosting,firestore,functions --force
 ```
 
 ---
 
 ## 🔑 Environment Secrets Reference
 - **Frontend `.env`**: Needs `VITE_FIREBASE_*` credentials.
-- **Backend `functions/.env`**: Needs `GEMINI_API_KEY` for AI recommendations.
+- **Backend `functions/.env`**:
+  - `GEMINI_API_KEY`: API Key for AI recommendations.
+  - `VITE_STRIPE_SECRET_KEY`: Secret Key for Stripe Checkout sessions.

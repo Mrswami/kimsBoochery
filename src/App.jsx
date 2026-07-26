@@ -219,122 +219,210 @@ function StickerSVG() {
 
 // Kimmy Armadillo Vector Poses SVG Component
 function KimmySVG({ pose = 'welcome' }) {
+  const defs = (
+    <defs>
+      {/* Premium Shading Gradients */}
+      <linearGradient id="kimmyShellGrad" x1="10%" y1="0%" x2="90%" y2="100%">
+        <stop offset="0%" stopColor="#e9d5ff" /> {/* Light purple */}
+        <stop offset="50%" stopColor="#c084fc" /> {/* Medium purple */}
+        <stop offset="100%" stopColor="#7c3aed" /> {/* Deep violet */}
+      </linearGradient>
+      <linearGradient id="kimmySkinGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="#fed7aa" /> {/* Warm peach/apricot */}
+        <stop offset="40%" stopColor="#f472b6" /> {/* Soft pink */}
+        <stop offset="100%" stopColor="#db2777" /> {/* Deep rose */}
+      </linearGradient>
+      <linearGradient id="boochBottleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="#f59e0b" /> {/* Amber */}
+        <stop offset="100%" stopColor="#78350f" /> {/* Dark brown glass */}
+      </linearGradient>
+      <linearGradient id="liquidGrad" x1="0%" y1="100%" x2="0%" y2="0%">
+        <stop offset="0%" stopColor="#10b981" /> {/* Green booch */}
+        <stop offset="100%" stopColor="#a7f3d0" />
+      </linearGradient>
+      <radialGradient id="blushGrad" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stopColor="#f43f5e" stopOpacity="0.6" />
+        <stop offset="100%" stopColor="#f43f5e" stopOpacity="0" />
+      </radialGradient>
+      {/* Drop shadow for 3D shell plate separation */}
+      <filter id="plateShadow" x="-10%" y="-10%" width="125%" height="125%">
+        <feDropShadow dx="-0.8" dy="0.8" stdDeviation="0.6" floodColor="#4c1d95" floodOpacity="0.4" />
+      </filter>
+      <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="2" stdDeviation="2" floodColor="#090d16" floodOpacity="0.4" />
+      </filter>
+    </defs>
+  );
+
   if (pose === 'sassy') {
     return (
-      <svg viewBox="0 0 100 100" width="100" height="100" style={{ display: 'block', margin: '0 auto' }}>
-        {/* Curled tail / shell backdrop */}
-        <path d="M 20 50 C 20 25, 70 25, 70 50 C 70 65, 20 65, 20 50 Z" fill="#d8b4fe" stroke="#8b5cf6" strokeWidth="2.5" />
-        <path d="M 30 32 C 40 28, 50 28, 60 32" fill="none" stroke="#f3e8ff" strokeWidth="1.5" />
-        <path d="M 26 40 C 36 36, 46 36, 62 40" fill="none" stroke="#f3e8ff" strokeWidth="1.5" />
+      <svg viewBox="0 0 100 100" width="100" height="100" style={{ display: 'block', margin: '0 auto', filter: 'url(#softShadow)' }}>
+        {defs}
+        {/* Tail (Curled and grumpy up in the air) */}
+        <path d="M 24 54 C 18 50, 10 38, 14 26 C 17 18, 25 22, 22 28 C 19 34, 23 44, 28 50" fill="none" stroke="url(#kimmySkinGrad)" strokeWidth="4.5" strokeLinecap="round" />
+        
+        {/* Layered Armadillo Shell (Plates overlaying for 3D feel) */}
+        <path d="M 22 52 C 20 30, 68 28, 68 50 C 68 64, 22 64, 22 52 Z" fill="url(#kimmyShellGrad)" stroke="#6d28d9" strokeWidth="1.5" />
+        {/* Shell plates/bands */}
+        <path d="M 33 33 Q 48 31, 63 36" fill="none" stroke="#f3e8ff" strokeWidth="2" opacity="0.8" filter="url(#plateShadow)" />
+        <path d="M 28 42 Q 46 39, 66 43" fill="none" stroke="#f3e8ff" strokeWidth="2.2" opacity="0.8" filter="url(#plateShadow)" />
+        <path d="M 26 51 Q 45 48, 65 51" fill="none" stroke="#f3e8ff" strokeWidth="2.2" opacity="0.8" filter="url(#plateShadow)" />
 
-        {/* Grumpy Head pointing right */}
-        <path d="M 62 45 L 80 43 C 83 42, 85 46, 80 49 L 65 52 Z" fill="#f472b6" stroke="#db2777" strokeWidth="1.5" />
-        <path d="M 60 45 L 53 38 C 51 36, 53 35, 55 37 Z" fill="#db2777" />
+        {/* Head (Tilt backward, nose up in the air) */}
+        <path d="M 64 45 L 82 39 C 85 38, 86 42, 81 46 L 66 50 Z" fill="url(#kimmySkinGrad)" stroke="#be123c" strokeWidth="1" />
+        {/* Long Grumpy Ears */}
+        <path d="M 63 43 L 53 32 Q 50 28, 54 30 L 61 40 Z" fill="url(#kimmySkinGrad)" stroke="#be123c" strokeWidth="0.8" />
+        <path d="M 63 43 L 57 28 Q 55 25, 59 27 L 65 39 Z" fill="url(#kimmySkinGrad)" stroke="#be123c" strokeWidth="0.8" />
+        <path d="M 56 31 L 59 38" stroke="#f472b6" strokeWidth="1" />
 
-        {/* Half-closed sassy eye */}
-        <path d="M 68 44 Q 71 42, 74 44" stroke="#000" strokeWidth="1.5" fill="none" />
-        <circle cx="71.5" cy="46.5" r="1.5" fill="#000" />
-        <circle cx="70" cy="50" r="2.5" fill="#f43f5e" opacity="0.4" /> {/* Blush */}
+        {/* Closed/Sassy Eye */}
+        <path d="M 70 41 Q 74 38, 77 41" stroke="#1e293b" strokeWidth="2.2" fill="none" strokeLinecap="round" />
+        <line x1="72" y1="40" x2="70" y2="38" stroke="#1e293b" strokeWidth="1.2" /> {/* Eyelash */}
+        <line x1="76" y1="40" x2="78" y2="38" stroke="#1e293b" strokeWidth="1.2" /> {/* Eyelash */}
+        <circle cx="74" cy="46" r="3.5" fill="url(#blushGrad)" />
 
-        {/* Sassy Crossed Arms */}
-        <path d="M 40 52 Q 52 56, 62 50" fill="none" stroke="#f472b6" strokeWidth="3.5" strokeLinecap="round" />
-        <path d="M 42 49 Q 32 53, 30 49" fill="none" stroke="#f472b6" strokeWidth="3.5" strokeLinecap="round" />
+        {/* Crossed Sassy Arms */}
+        <path d="M 46 54 Q 60 58, 68 51" fill="none" stroke="url(#kimmySkinGrad)" strokeWidth="4.5" strokeLinecap="round" filter="url(#plateShadow)" />
+        <path d="M 52 50 Q 40 55, 36 50" fill="none" stroke="url(#kimmySkinGrad)" strokeWidth="4.5" strokeLinecap="round" />
 
-        {/* Tail up in the air */}
-        <path d="M 20 50 Q 8 40, 12 32" fill="none" stroke="#8b5cf6" strokeWidth="2.5" />
+        {/* Claws on Crossed Arms */}
+        <line x1="66" y1="52" x2="69" y2="50" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" />
+        <line x1="36" y1="51" x2="33" y2="49" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" />
 
-        {/* Feet */}
-        <rect x="30" y="58" width="8" height="6" rx="2" fill="#f472b6" />
-        <rect x="52" y="58" width="8" height="6" rx="2" fill="#f472b6" />
+        {/* Feet standing firmly */}
+        <rect x="32" y="60" width="9" height="7" rx="2.5" fill="url(#kimmySkinGrad)" stroke="#be123c" strokeWidth="1" />
+        <rect x="52" y="60" width="9" height="7" rx="2.5" fill="url(#kimmySkinGrad)" stroke="#be123c" strokeWidth="1" />
+        {/* Tiny white toenails */}
+        <circle cx="34" cy="65" r="1" fill="#fff" />
+        <circle cx="37" cy="66" r="1" fill="#fff" />
+        <circle cx="54" cy="65" r="1" fill="#fff" />
+        <circle cx="57" cy="66" r="1" fill="#fff" />
       </svg>
     );
   }
 
   if (pose === 'sipping') {
     return (
-      <svg viewBox="0 0 100 100" width="100" height="100" style={{ display: 'block', margin: '0 auto' }}>
-        {/* Shell */}
-        <path d="M 25 50 C 25 25, 75 25, 75 50 C 75 65, 25 65, 25 50 Z" fill="#d8b4fe" stroke="#8b5cf6" strokeWidth="2.5" />
-        <path d="M 35 32 C 45 28, 55 28, 65 32" fill="none" stroke="#f3e8ff" strokeWidth="1.5" />
-
-        {/* Head tilted down to straw */}
-        <path d="M 64 48 L 78 54 C 80 55, 78 58, 74 57 L 65 52 Z" fill="#f472b6" stroke="#db2777" strokeWidth="1.5" />
-        <circle cx="70" cy="51" r="2" fill="#000" />
-        <circle cx="69" cy="51" r="0.6" fill="#fff" />
-
-        {/* Straw and Bottle */}
-        <line x1="75" y1="56" x2="80" y2="67" stroke="#10b981" strokeWidth="2.5" />
-        <rect x="76" y="67" width="10" height="17" rx="1.5" fill="#78350f" stroke="#451a03" strokeWidth="1" />
-        <rect x="79" y="64" width="4" height="3" fill="#171717" />
-        <rect x="77" y="71" width="8" height="9" fill="#fef08a" opacity="0.9" /> {/* Yellow label */}
-
-        {/* Drinking Bubbles/Slurp text */}
-        <circle cx="88" cy="48" r="1.5" fill="#06b6d4" opacity="0.6" />
-        <circle cx="92" cy="40" r="2.5" fill="#06b6d4" opacity="0.4" />
-        <text x="89" y="60" fontSize="4.5" fill="#06b6d4" fontWeight="800" fontFamily="sans-serif">slurp</text>
-
-        {/* Puffed Cheek */}
-        <ellipse cx="67" cy="52" rx="4.5" ry="3.8" fill="#f472b6" />
-
-        {/* Arm holding straw */}
-        <path d="M 45 54 Q 65 62, 75 64" fill="none" stroke="#f472b6" strokeWidth="3" strokeLinecap="round" />
-
+      <svg viewBox="0 0 100 100" width="100" height="100" style={{ display: 'block', margin: '0 auto', filter: 'url(#softShadow)' }}>
+        {defs}
         {/* Tail */}
-        <path d="M 25 52 Q 12 50, 16 58" fill="none" stroke="#8b5cf6" strokeWidth="2" />
+        <path d="M 26 54 C 20 54, 12 50, 16 60 Q 18 64, 25 56" fill="none" stroke="url(#kimmySkinGrad)" strokeWidth="3" />
+
+        {/* Shell */}
+        <path d="M 25 52 C 25 28, 73 28, 73 50 C 73 64, 25 64, 25 52 Z" fill="url(#kimmyShellGrad)" stroke="#6d28d9" strokeWidth="1.5" />
+        <path d="M 36 34 Q 49 32, 64 36" fill="none" stroke="#f3e8ff" strokeWidth="2" opacity="0.8" filter="url(#plateShadow)" />
+        <path d="M 30 43 Q 48 40, 68 44" fill="none" stroke="#f3e8ff" strokeWidth="2" opacity="0.8" filter="url(#plateShadow)" />
+
+        {/* Head tilted down towards the straw */}
+        <path d="M 62 48 L 76 55 C 79 56, 78 60, 72 58 L 63 52 Z" fill="url(#kimmySkinGrad)" stroke="#be123c" strokeWidth="1" />
+        <circle cx="68" cy="50" r="2.2" fill="#1e293b" />
+        <circle cx="67.2" cy="49.2" r="0.7" fill="#fff" />
+        
+        {/* Ears laid back relaxed */}
+        <path d="M 61 44 L 50 38 Q 48 36, 51 36 L 60 41 Z" fill="url(#kimmySkinGrad)" stroke="#be123c" strokeWidth="0.8" />
+        
+        {/* Puffed Cheek (Drinking satisfaction) */}
+        <ellipse cx="65" cy="53" rx="5" ry="4.2" fill="url(#kimmySkinGrad)" stroke="#be123c" strokeWidth="0.5" />
+        <circle cx="66" cy="54" r="3" fill="url(#blushGrad)" />
+
+        {/* Amber Kombucha Bottle */}
+        <rect x="78" y="65" width="12" height="20" rx="2" fill="url(#boochBottleGrad)" stroke="#451a03" strokeWidth="1" />
+        <rect x="81" y="61" width="6" height="4" fill="#1e293b" />
+        <rect x="79" y="70" width="10" height="11" fill="url(#liquidGrad)" opacity="0.85" rx="1" />
+        <text x="84" y="77" fontSize="4.5" fill="#fff" fontWeight="900" textAnchor="middle" fontFamily="sans-serif" letterSpacing="0.05em">K</text>
+
+        {/* Glowing Green Straw */}
+        <path d="M 72 57 L 77 55 L 84 64 L 84 74" fill="none" stroke="#34d399" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+
+        {/* Slurp Bubbles */}
+        <circle cx="88" cy="48" r="1.8" fill="#10b981" opacity="0.8" />
+        <circle cx="93" cy="42" r="2.5" fill="#34d399" opacity="0.6" />
+        <text x="91" y="55" fontSize="4" fill="#059669" fontWeight="900" fontFamily="monospace">slurp</text>
+
+        {/* Arm holding the straw/bottle */}
+        <path d="M 46 54 Q 65 60, 78 59" fill="none" stroke="url(#kimmySkinGrad)" strokeWidth="3.8" strokeLinecap="round" filter="url(#plateShadow)" />
 
         {/* Feet */}
-        <rect x="35" y="58" width="8" height="6" rx="2" fill="#f472b6" />
-        <rect x="57" y="58" width="8" height="6" rx="2" fill="#f472b6" />
+        <rect x="34" y="60" width="8" height="6" rx="2" fill="url(#kimmySkinGrad)" stroke="#be123c" strokeWidth="0.8" />
+        <rect x="55" y="60" width="8" height="6" rx="2" fill="url(#kimmySkinGrad)" stroke="#be123c" strokeWidth="0.8" />
       </svg>
     );
   }
 
   if (pose === 'rolled') {
     return (
-      <svg viewBox="0 0 100 100" width="100" height="100" style={{ display: 'block', margin: '0 auto' }}>
-        {/* Segmented curled shell ball */}
-        <circle cx="50" cy="50" r="30" fill="#d8b4fe" stroke="#8b5cf6" strokeWidth="3" />
-        <circle cx="50" cy="50" r="24" fill="none" stroke="#f3e8ff" strokeWidth="2.5" strokeDasharray="14,6" />
-        <circle cx="50" cy="50" r="18" fill="none" stroke="#f3e8ff" strokeWidth="2" strokeDasharray="8,4" />
-        <path d="M 50 20 Q 20 40, 50 80" fill="none" stroke="#8b5cf6" strokeWidth="2" />
-        <path d="M 50 20 Q 80 40, 50 80" fill="none" stroke="#8b5cf6" strokeWidth="2" />
+      <svg viewBox="0 0 100 100" width="100" height="100" style={{ display: 'block', margin: '0 auto', filter: 'url(#softShadow)' }}>
+        {defs}
+        {/* Outer armored circular shell */}
+        <circle cx="50" cy="50" r="32" fill="url(#kimmyShellGrad)" stroke="#6d28d9" strokeWidth="2" />
+        
+        {/* Concentric shell plates lines to give rolled-up armor plates look */}
+        <circle cx="50" cy="50" r="26" fill="none" stroke="#f3e8ff" strokeWidth="2" strokeDasharray="16,8" opacity="0.85" filter="url(#plateShadow)" />
+        <circle cx="50" cy="50" r="20" fill="none" stroke="#f3e8ff" strokeWidth="1.8" strokeDasharray="10,6" opacity="0.8" filter="url(#plateShadow)" />
+        <circle cx="50" cy="50" r="13" fill="none" stroke="#f3e8ff" strokeWidth="1.5" strokeDasharray="6,4" opacity="0.75" />
 
-        {/* Snoozing Zzz */}
-        <text x="76" y="32" fontSize="9" fill="#c084fc" fontWeight="bold" fontFamily="sans-serif" opacity="0.8">Z</text>
-        <text x="83" y="24" fontSize="6.5" fill="#c084fc" fontFamily="sans-serif" opacity="0.6">z</text>
-        <text x="88" y="18" fontSize="4.5" fill="#c084fc" fontFamily="sans-serif" opacity="0.4">z</text>
+        {/* Curled shell segment seams */}
+        <path d="M 50 18 C 28 32, 28 68, 50 82" fill="none" stroke="#5b21b6" strokeWidth="1.5" />
+        <path d="M 50 18 C 72 32, 72 68, 50 82" fill="none" stroke="#5b21b6" strokeWidth="1.5" />
+
+        {/* Snoozing Zzz animation labels */}
+        <text x="78" y="34" fontSize="10" fill="#a78bfa" fontWeight="900" fontFamily="sans-serif" opacity="0.9">Z</text>
+        <text x="85" y="25" fontSize="7" fill="#c084fc" fontWeight="bold" fontFamily="sans-serif" opacity="0.7">z</text>
+        <text x="91" y="18" fontSize="5" fill="#d8b4fe" fontFamily="sans-serif" opacity="0.5">z</text>
+
+        {/* Little snout & tail tips poking out slightly in rolled defense */}
+        <path d="M 48 82 Q 50 87, 52 82 Z" fill="url(#kimmySkinGrad)" />
       </svg>
     );
   }
 
   // Default: 'welcome'
   return (
-    <svg viewBox="0 0 100 100" width="100" height="100" style={{ display: 'block', margin: '0 auto' }}>
-      {/* Shell */}
-      <path d="M 25 50 C 25 25, 75 25, 75 50 C 75 65, 25 65, 25 50 Z" fill="#d8b4fe" stroke="#8b5cf6" strokeWidth="2.5" />
-      <path d="M 35 32 C 45 28, 55 28, 65 32" fill="none" stroke="#f3e8ff" strokeWidth="1.5" />
-      <path d="M 30 40 C 45 35, 55 35, 70 40" fill="none" stroke="#f3e8ff" strokeWidth="1.5" />
+    <svg viewBox="0 0 100 100" width="100" height="100" style={{ display: 'block', margin: '0 auto', filter: 'url(#softShadow)' }}>
+      {defs}
+      {/* Tail (Friendly wagging curve) */}
+      <path d="M 26 53 Q 12 48, 16 58 Q 18 63, 25 55" fill="none" stroke="url(#kimmySkinGrad)" strokeWidth="3" strokeLinecap="round" />
 
-      {/* Friendly Head */}
-      <path d="M 68 45 L 82 48 C 85 49, 85 53, 80 55 L 70 54 Z" fill="#f472b6" stroke="#db2777" strokeWidth="1.5" />
-      <path d="M 69 45 L 72 35 C 73 33, 75 33, 75 36 Z" fill="#db2777" />
-      <path d="M 66 46 L 68 37 C 69 35, 71 35, 71 38 Z" fill="#db2777" />
+      {/* Main Shell (Rich lavender/purple gradient) */}
+      <path d="M 24 50 C 24 26, 74 26, 74 48 C 74 62, 24 62, 24 50 Z" fill="url(#kimmyShellGrad)" stroke="#6d28d9" strokeWidth="1.5" />
+      
+      {/* Shell Scales/Bands overlays */}
+      <path d="M 35 32 Q 49 29, 64 33" fill="none" stroke="#f3e8ff" strokeWidth="2.2" opacity="0.85" filter="url(#plateShadow)" />
+      <path d="M 29 41 Q 48 38, 68 41" fill="none" stroke="#f3e8ff" strokeWidth="2.2" opacity="0.85" filter="url(#plateShadow)" />
+      <path d="M 26 50 Q 47 47, 67 49" fill="none" stroke="#f3e8ff" strokeWidth="2" opacity="0.8" filter="url(#plateShadow)" />
 
-      {/* Happy eye */}
-      <circle cx="74.5" cy="48.5" r="2.2" fill="#000" />
-      <circle cx="75.5" cy="47.5" r="0.7" fill="#fff" />
-      <circle cx="72" cy="51" r="2.5" fill="#f43f5e" opacity="0.5" /> {/* Blush */}
+      {/* Head (Friendly pointing forward) */}
+      <path d="M 66 44 L 83 46 C 87 47, 87 52, 82 54 L 68 52 Z" fill="url(#kimmySkinGrad)" stroke="#be123c" strokeWidth="1" />
+      {/* Ears up & alert */}
+      <path d="M 66 43 L 70 31 Q 72 28, 73 31 L 71 43 Z" fill="url(#kimmySkinGrad)" stroke="#be123c" strokeWidth="0.8" />
+      <path d="M 63 44 L 64 32 Q 66 29, 67 32 L 67 44 Z" fill="url(#kimmySkinGrad)" stroke="#be123c" strokeWidth="0.8" />
 
-      {/* Arms welcoming */}
-      <path d="M 45 54 Q 60 62, 70 60" fill="none" stroke="#f472b6" strokeWidth="3.2" strokeLinecap="round" />
-      <path d="M 35 54 Q 20 62, 10 60" fill="none" stroke="#f472b6" strokeWidth="3.2" strokeLinecap="round" />
+      {/* Cute Big Sparkling Eye */}
+      <circle cx="75" cy="47" r="2.8" fill="#1e293b" />
+      <circle cx="76.2" cy="45.8" r="0.8" fill="#fff" />
+      <circle cx="74.2" cy="48.2" r="0.4" fill="#fff" />
+      
+      {/* Rosy Blush Cheek */}
+      <circle cx="73" cy="51" r="3.2" fill="url(#blushGrad)" />
 
-      {/* Tail */}
-      <path d="M 25 52 Q 10 50, 14 58" fill="none" stroke="#8b5cf6" strokeWidth="2" />
+      {/* Cute Smile */}
+      <path d="M 78 51 Q 79 53, 77 54" fill="none" stroke="#be123c" strokeWidth="1.2" strokeLinecap="round" />
+
+      {/* Waving Welcoming Arms */}
+      <path d="M 45 53 Q 62 62, 72 58" fill="none" stroke="url(#kimmySkinGrad)" strokeWidth="4" strokeLinecap="round" filter="url(#plateShadow)" />
+      <path d="M 35 53 Q 20 62, 10 56" fill="none" stroke="url(#kimmySkinGrad)" strokeWidth="4" strokeLinecap="round" />
+
+      {/* White Claws on hands */}
+      <line x1="71" y1="59" x2="74" y2="57" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" />
+      <line x1="11" y1="57" x2="8" y2="55" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" />
 
       {/* Feet */}
-      <rect x="35" y="58" width="8" height="6" rx="2" fill="#f472b6" />
-      <rect x="57" y="58" width="8" height="6" rx="2" fill="#f472b6" />
+      <rect x="34" y="58" width="9" height="7" rx="2.5" fill="url(#kimmySkinGrad)" stroke="#be123c" strokeWidth="1" />
+      <rect x="56" y="58" width="9" height="7" rx="2.5" fill="url(#kimmySkinGrad)" stroke="#be123c" strokeWidth="1" />
+      <circle cx="36" cy="63" r="0.8" fill="#fff" />
+      <circle cx="39" cy="64" r="0.8" fill="#fff" />
+      <circle cx="58" cy="63" r="0.8" fill="#fff" />
+      <circle cx="61" cy="64" r="0.8" fill="#fff" />
     </svg>
   );
 }
@@ -397,7 +485,11 @@ function App() {
   const [storageQty, setStorageQty] = useState({ 'tank-a': 1, 'cold-room': 1, 'booth-locker': 1, 'trailer-slot': 1 });
   const [storageBookings, setStorageBookings] = useState([]);
 
-  // Load URL Role on Mount
+  // Merchant POS states
+  const [merchantQrData, setMerchantQrData] = useState(null);
+  const [isStripeProcessing, setIsStripeProcessing] = useState(false);
+
+  // Load URL Role & Cart & Stripe Redirect on Mount
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const urlRole = params.get('role');
@@ -405,6 +497,66 @@ function App() {
       setRole('vendor');
     } else {
       setRole('customer');
+    }
+
+    const checkoutStatus = params.get('checkout_status');
+    const redirectOrderId = params.get('order_id');
+    const redirectPayMode = params.get('payment_mode');
+    const cartParam = params.get('cart');
+
+    if (checkoutStatus === 'success' && redirectOrderId && cartParam) {
+      const parsedCart = {};
+      cartParam.split(',').forEach(item => {
+        const [id, qtyStr] = item.split(':');
+        const qty = parseInt(qtyStr, 10);
+        if (id && !isNaN(qty)) {
+          parsedCart[id] = qty;
+        }
+      });
+
+      // Calculate total using local lookup
+      const totalAmount = Object.entries(parsedCart).reduce((sum, [id, qty]) => {
+        const product = catalog.find(p => p.id === id);
+        const price = product ? product.rawPrice : 0;
+        return sum + (price * qty);
+      }, 0).toFixed(2);
+
+      // Log invoice as Stripe payment
+      logInvoiceToFirestore(redirectOrderId, parsedCart, totalAmount, redirectPayMode || 'stripe');
+
+      setOrderPassDetails({
+        id: redirectOrderId,
+        total: totalAmount,
+        items: parsedCart,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        phone: 'Stripe Customer'
+      });
+      setOrderStatus('ready');
+      setActiveTab('checkout');
+
+      // Clear URL parameters
+      const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+      window.history.replaceState({ path: cleanUrl }, '', cleanUrl);
+      return;
+    }
+
+    if (cartParam) {
+      const parsedCart = {};
+      cartParam.split(',').forEach(item => {
+        const [id, qtyStr] = item.split(':');
+        const qty = parseInt(qtyStr, 10);
+        if (id && !isNaN(qty)) {
+          parsedCart[id] = qty;
+        }
+      });
+      setCart(parsedCart);
+      
+      // Auto-open checkout drawer/view
+      setOrderStatus(null);
+      
+      // Clear URL parameters to prevent re-parsing on refresh
+      const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+      window.history.replaceState({ path: cleanUrl }, '', cleanUrl);
     }
   }, []);
 
@@ -674,7 +826,7 @@ function App() {
     }, 0);
   };
 
-  const logInvoiceToFirestore = async (orderId, cartData, totalAmount) => {
+  const logInvoiceToFirestore = async (orderId, cartData, totalAmount, customPayMode = null, customPhone = null) => {
     try {
       const invoiceRef = doc(db, 'invoices', orderId);
       const itemsList = Object.entries(cartData).map(([id, qty]) => {
@@ -692,8 +844,8 @@ function App() {
         timestamp: serverTimestamp(),
         items: itemsList,
         total: parseFloat(totalAmount),
-        paymentMode: paymentMode,
-        customerPhone: currentUser ? currentUser.phoneNumber : 'Guest Customer'
+        paymentMode: customPayMode || paymentMode,
+        customerPhone: customPhone || (currentUser ? currentUser.phoneNumber : 'Guest Customer')
       });
       console.log("Invoice successfully logged to Firestore:", orderId);
     } catch (e) {
@@ -738,6 +890,69 @@ function App() {
         setOrderStatus('ready');
       }
     }, 1000);
+  };
+
+  const handleMerchantCheckout = async (method) => {
+    const orderId = `KB-${Math.floor(100000 + Math.random() * 900000)}`;
+    const totalVal = getCartTotal().toFixed(2);
+
+    if (method === 'cash' || method === 'ebt') {
+      logInvoiceToFirestore(orderId, cart, totalVal, method, 'POS Walk-up Customer');
+      setOrderPassDetails({
+        id: orderId,
+        total: totalVal,
+        items: { ...cart },
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        phone: `POS - ${method.toUpperCase()}`
+      });
+      setOrderStatus('ready');
+    } else if (method === 'venmo') {
+      setMerchantQrData({
+        type: 'venmo',
+        orderId,
+        total: totalVal,
+        url: `https://venmo.com/kimsboochery?amount=${totalVal}&note=Order%20${orderId}`
+      });
+    } else if (method === 'qr') {
+      const cartQuery = Object.entries(cart).map(([id, qty]) => `${id}:${qty}`).join(',');
+      const checkoutUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}?cart=${cartQuery}`;
+      setMerchantQrData({
+        type: 'customer_checkout',
+        orderId,
+        total: totalVal,
+        url: checkoutUrl
+      });
+    } else if (method === 'stripe') {
+      setIsStripeProcessing(true);
+      try {
+        const createSession = httpsCallable(functions, 'createStripeCheckoutSession');
+        const cartQuery = Object.entries(cart).map(([id, qty]) => `${id}:${qty}`).join(',');
+        
+        const response = await createSession({
+          items: Object.entries(cart).map(([itemId, qty]) => {
+            const product = catalog.find(p => p.id === itemId);
+            return {
+              name: product ? product.name : itemId,
+              price: product ? product.rawPrice : 0,
+              quantity: qty
+            };
+          }),
+          successUrl: `${window.location.protocol}//${window.location.host}${window.location.pathname}?checkout_status=success&order_id=${orderId}&payment_mode=stripe&cart=${cartQuery}`,
+          cancelUrl: window.location.href
+        });
+
+        if (response.data && response.data.url) {
+          window.location.href = response.data.url;
+        } else {
+          alert("Failed to initiate Stripe Checkout Session.");
+        }
+      } catch (err) {
+        console.error("Stripe POS Error:", err);
+        alert(`Stripe Error: ${err.message || err}`);
+      } finally {
+        setIsStripeProcessing(false);
+      }
+    }
   };
 
   const resetOrder = () => {
@@ -1452,30 +1667,72 @@ function App() {
                     </div>
 
                     {/* Payment selector */}
-                    <h4 style={{ fontSize: '0.85rem', color: '#fff', marginBottom: '0.5rem' }}>Select Payment Method</h4>
+                    {role === 'vendor' ? (
+                      <div className="animate-fade">
+                        <h4 style={{ fontSize: '0.85rem', color: 'var(--accent-cyan)', marginBottom: '0.75rem', fontWeight: '800' }}>
+                          <i className="fa-solid fa-cash-register" /> MERCHANT POS CHECKOUT PANEL
+                        </h4>
+                        
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '1rem' }}>
+                          <button className="btn btn-primary" style={{ background: '#10b981', color: '#050814', border: 'none', fontWeight: '800', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }} onClick={() => handleMerchantCheckout('cash')}>
+                            <i className="fa-solid fa-money-bill-wave" /> Register Cash
+                          </button>
+                          <button className="btn btn-primary" style={{ background: '#f59e0b', color: '#050814', border: 'none', fontWeight: '800', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }} onClick={() => handleMerchantCheckout('ebt')}>
+                            <i className="fa-solid fa-coins" /> Register EBT
+                          </button>
+                          <button className="btn btn-primary" style={{ background: '#3b82f6', color: '#fff', border: 'none', fontWeight: '800', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }} onClick={() => handleMerchantCheckout('venmo')}>
+                            <i className="fa-solid fa-mobile-screen-button" /> Venmo QR
+                          </button>
+                          <button className="btn btn-primary" style={{ background: 'var(--accent-violet)', color: '#fff', border: 'none', fontWeight: '800', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }} onClick={() => handleMerchantCheckout('qr')}>
+                            <i className="fa-solid fa-qrcode" /> Cart QR
+                          </button>
+                        </div>
 
-                    <div className="payment-method-grid">
-                      <div className={`payment-method-card ${paymentMode === 'apple-pay' ? 'active' : ''}`} onClick={() => setPaymentMode('apple-pay')}>
-                        <i className="fa-brands fa-apple" />
-                        <span>Apple Pay</span>
+                        <button 
+                          className="btn btn-primary" 
+                          style={{ width: '100%', padding: '12px', background: '#e11d48', color: '#fff', border: 'none', fontWeight: '800', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }} 
+                          onClick={() => handleMerchantCheckout('stripe')}
+                          disabled={isStripeProcessing}
+                        >
+                          {isStripeProcessing ? (
+                            <>
+                              <i className="fa-solid fa-spinner fa-spin" /> Redirecting to Stripe...
+                            </>
+                          ) : (
+                            <>
+                              <i className="fa-solid fa-credit-card" /> Stripe Tap-to-Pay (Admin Phone)
+                            </>
+                          )}
+                        </button>
                       </div>
-                      <div className={`payment-method-card ${paymentMode === 'gpay' ? 'active' : ''}`} onClick={() => setPaymentMode('gpay')}>
-                        <i className="fa-brands fa-google" />
-                        <span>Google Pay</span>
-                      </div>
-                      <div className={`payment-method-card ${paymentMode === 'card' ? 'active' : ''}`} onClick={() => setPaymentMode('card')}>
-                        <i className="fa-solid fa-credit-card" />
-                        <span>Credit/Debit Card</span>
-                      </div>
-                      <div className={`payment-method-card ${paymentMode === 'cash' ? 'active' : ''}`} onClick={() => setPaymentMode('cash')}>
-                        <i className="fa-solid fa-money-bill-wave" />
-                        <span>Cash at Booth #12</span>
-                      </div>
-                    </div>
+                    ) : (
+                      <>
+                        <h4 style={{ fontSize: '0.85rem', color: '#fff', marginBottom: '0.5rem' }}>Select Payment Method</h4>
 
-                    <button className="btn btn-primary" style={{ width: '100%', padding: '12px' }} onClick={handleCheckout}>
-                      Pay ${getCartTotal().toFixed(2)} with {paymentMode.replace('-', ' ').toUpperCase()}
-                    </button>
+                        <div className="payment-method-grid">
+                          <div className={`payment-method-card ${paymentMode === 'apple-pay' ? 'active' : ''}`} onClick={() => setPaymentMode('apple-pay')}>
+                            <i className="fa-brands fa-apple" />
+                            <span>Apple Pay</span>
+                          </div>
+                          <div className={`payment-method-card ${paymentMode === 'gpay' ? 'active' : ''}`} onClick={() => setPaymentMode('gpay')}>
+                            <i className="fa-brands fa-google" />
+                            <span>Google Pay</span>
+                          </div>
+                          <div className={`payment-method-card ${paymentMode === 'card' ? 'active' : ''}`} onClick={() => setPaymentMode('card')}>
+                            <i className="fa-solid fa-credit-card" />
+                            <span>Credit/Debit Card</span>
+                          </div>
+                          <div className={`payment-method-card ${paymentMode === 'cash' ? 'active' : ''}`} onClick={() => setPaymentMode('cash')}>
+                            <i className="fa-solid fa-money-bill-wave" />
+                            <span>Cash at Booth #12</span>
+                          </div>
+                        </div>
+
+                        <button className="btn btn-primary" style={{ width: '100%', padding: '12px' }} onClick={handleCheckout}>
+                          Pay ${getCartTotal().toFixed(2)} with {paymentMode.replace('-', ' ').toUpperCase()}
+                        </button>
+                      </>
+                    )}
                   </div>
                 )}
               </div>
@@ -1969,6 +2226,61 @@ function App() {
               >
                 Quick Add & Checkout
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Merchant POS QR Modal ──────────────────────── */}
+      {merchantQrData && (
+        <div style={{
+          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+          background: 'rgba(5, 8, 20, 0.95)', backdropFilter: 'blur(10px)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 99999, padding: '1.5rem'
+        }} className="animate-fade">
+          <div className="card text-center" style={{ maxWidth: '440px', width: '100%', border: '1px solid var(--accent-cyan)' }}>
+            <h3 style={{ fontSize: '1.25rem', color: '#fff', marginBottom: '0.75rem' }}>
+              {merchantQrData.type === 'venmo' ? '💸 Pay with Venmo' : '📱 Customer Scan-to-Pay'}
+            </h3>
+            <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '1.25rem' }}>
+              {merchantQrData.type === 'venmo' 
+                ? `Show this QR to the customer to scan and pay $${merchantQrData.total} via Venmo.` 
+                : `Customer scans this QR code to load the cart and check out on their own phone.`}
+            </p>
+
+            <div style={{ padding: '1rem', background: '#000', borderRadius: '12px', display: 'inline-block', marginBottom: '1.25rem' }}>
+              <img 
+                src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&color=${merchantQrData.type === 'venmo' ? '3b82f6' : '06b6d4'}&bgcolor=000000&data=${encodeURIComponent(merchantQrData.url)}`}
+                alt="Checkout QR"
+                style={{ width: '200px', height: '200px', borderRadius: '8px' }}
+              />
+            </div>
+
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <button className="btn btn-ghost" style={{ flex: 1 }} onClick={() => setMerchantQrData(null)}>Cancel</button>
+              {merchantQrData.type === 'venmo' ? (
+                <button className="btn btn-primary" style={{ flex: 2, background: '#3b82f6', color: '#fff', border: 'none' }} onClick={() => {
+                  logInvoiceToFirestore(merchantQrData.orderId, cart, merchantQrData.total, 'venmo', 'POS Venmo Customer');
+                  setOrderPassDetails({
+                    id: merchantQrData.orderId,
+                    total: merchantQrData.total,
+                    items: { ...cart },
+                    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                    phone: 'POS - VENMO'
+                  });
+                  setOrderStatus('ready');
+                  setMerchantQrData(null);
+                }}>
+                  Verify & Complete
+                </button>
+              ) : (
+                <button className="btn btn-primary" style={{ flex: 2 }} onClick={() => {
+                  resetOrder();
+                  setMerchantQrData(null);
+                }}>
+                  Done (Cart Shared)
+                </button>
+              )}
             </div>
           </div>
         </div>
