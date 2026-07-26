@@ -178,7 +178,7 @@ body {
 /* ── Main Layout ──────────────────────────────────────────── */
 .main-content {
   flex: 1;
-  max-width: 600px; /* Constrain for premium mobile app view */
+  max-width: 1000px; /* Constrain for premium mobile app view while allowing desktop grid scaling */
   width: 100%;
   margin: 0 auto;
   padding: 1.25rem 1rem 2rem;
@@ -235,6 +235,18 @@ body {
   color: #050814;
   border-color: var(--accent-cyan);
   font-weight: 700;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+  margin-bottom: 1.5rem;
+}
+
+.product-grid .product-card {
+  margin-bottom: 0;
+  height: 100%;
 }
 
 .product-card {

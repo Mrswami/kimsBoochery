@@ -15,34 +15,19 @@ import './index.css'
 // Fallback flavors list mapping additional fields (stars, code, abv, inventory)
 const baseFlavors = [
   {
-    id: "sad-cactus",
-    name: "Sad Cactus",
-    desc: "Prickly pear & aloe. Brewed with tears & attitude.",
-    price: "$5.00",
-    rawPrice: 5.00,
-    color: "rose",
-    ingredients: "Organic Kombucha Culture, Wild Texas Prickly Pear Juice, Organic Aloe Vera Extract, Hibiscus Petals, Filtered Spring Water.",
-    tastingNotes: "Sharp, dry finish with a sweet cactus-fruit body. Light floral undertones.",
-    stars: 4.8,
-    reviews: 32,
-    abv: "0.5% ABV",
-    inventory: 14,
-    code: "SAD01"
-  },
-  {
-    id: "lone-star",
-    name: "Lone Star Blackout",
-    desc: "Blackberry, charcoal, & oak. Dark & bold.",
+    id: "citrus-surge",
+    name: "Citrus Surge",
+    desc: "Blood orange, fresh ginger, & raw turmeric. Zesty & spicy.",
     price: "$5.50",
     rawPrice: 5.50,
-    color: "violet",
-    ingredients: "Organic Kombucha Culture, Wild Blackberries, Activated Charcoal (Coconut Source), Sweet Oak Wood Infusion, Filtered Spring Water.",
-    tastingNotes: "Rich, tannic, blackberry-forward with a smoky, earthy mouthfeel. Deep obsidian color.",
-    stars: 4.9,
-    reviews: 58,
-    abv: "1.2% ABV",
-    inventory: 9,
-    code: "LONE02"
+    color: "amber",
+    ingredients: "Organic Kombucha Culture, Pressed Blood Orange, Organic Peruvian Ginger Root, Fresh Turmeric, Raw Texas Honey.",
+    tastingNotes: "Tangy citrus bite with a warm ginger burn on the throat. Bright golden amber hue.",
+    stars: 4.8,
+    reviews: 29,
+    abv: "0.8% ABV",
+    inventory: 7,
+    code: "HONEY04"
   },
   {
     id: "grapefruit",
@@ -60,19 +45,19 @@ const baseFlavors = [
     code: "RUST03"
   },
   {
-    id: "citrus-surge",
-    name: "Citrus Surge",
-    desc: "Blood orange, fresh ginger, & raw turmeric. Zesty & spicy.",
-    price: "$5.50",
-    rawPrice: 5.50,
-    color: "amber",
-    ingredients: "Organic Kombucha Culture, Pressed Blood Orange, Organic Peruvian Ginger Root, Fresh Turmeric, Raw Texas Honey.",
-    tastingNotes: "Tangy citrus bite with a warm ginger burn on the throat. Bright golden amber hue.",
+    id: "sad-cactus",
+    name: "Sad Cactus",
+    desc: "Prickly pear & aloe. Brewed with tears & attitude.",
+    price: "$5.00",
+    rawPrice: 5.00,
+    color: "rose",
+    ingredients: "Organic Kombucha Culture, Wild Texas Prickly Pear Juice, Organic Aloe Vera Extract, Hibiscus Petals, Filtered Spring Water.",
+    tastingNotes: "Sharp, dry finish with a sweet cactus-fruit body. Light floral undertones.",
     stars: 4.8,
-    reviews: 29,
-    abv: "0.8% ABV",
-    inventory: 7,
-    code: "HONEY04"
+    reviews: 32,
+    abv: "0.5% ABV",
+    inventory: 14,
+    code: "SAD01"
   },
   {
     id: "hill-country",
@@ -88,6 +73,21 @@ const baseFlavors = [
     abv: "0.4% ABV",
     inventory: 15,
     code: "LAV05"
+  },
+  {
+    id: "lone-star",
+    name: "Lone Star Blackout",
+    desc: "Blackberry, charcoal, & oak. Dark & bold.",
+    price: "$5.50",
+    rawPrice: 5.50,
+    color: "violet",
+    ingredients: "Organic Kombucha Culture, Wild Blackberries, Activated Charcoal (Coconut Source), Sweet Oak Wood Infusion, Filtered Spring Water.",
+    tastingNotes: "Rich, tannic, blackberry-forward with a smoky, earthy mouthfeel. Deep obsidian color.",
+    stars: 4.9,
+    reviews: 58,
+    abv: "1.2% ABV",
+    inventory: 9,
+    code: "LONE02"
   }
 ];
 
@@ -1180,7 +1180,7 @@ function App() {
             </div>
 
             {/* Catalog Grid */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <div className="product-grid">
               {filteredCatalog.map(product => {
                 const cartQty = cart[product.id] || 0;
                 return (
