@@ -9,7 +9,7 @@ import './index.css'
 
 // ══════════════════════════════════════════════════════════════
 // KIM'S BOOCHERY — Sunday Market Quick-Pickup & Order App
-// Upgraded Mobile-First Experience
+// Upgraded Mobile-First Experience - Featuring Kimmy Mascot
 // ══════════════════════════════════════════════════════════════
 
 // Fallback flavors list mapping additional fields (stars, code, abv, inventory)
@@ -226,7 +226,129 @@ function StickerSVG() {
       <circle cx="35" cy="40" r="22" fill="#10b981" opacity="0.3" stroke="#10b981" strokeWidth="1.5" />
       <text x="35" y="43" fontSize="8" fontWeight="800" fill="#fff" textAnchor="middle">BOOCH</text>
       <rect x="42" y="38" width="38" height="38" rx="5" fill="#f43f5e" opacity="0.3" stroke="#f43f5e" strokeWidth="1.5" transform="rotate(15 61 57)" />
-      <text x="61" y="60" fontSize="7" fontWeight="800" fill="#fff" textAnchor="middle" transform="rotate(15 61 57)">BUTCH</text>
+      <text x="61" y="60" fontSize="7" fontWeight="800" fill="#fff" textAnchor="middle" transform="rotate(15 61 57)">KIMMY</text>
+    </svg>
+  );
+}
+
+// Kimmy Armadillo Vector Poses SVG Component
+function KimmySVG({ pose = 'welcome' }) {
+  if (pose === 'sassy') {
+    return (
+      <svg viewBox="0 0 100 100" width="100" height="100" style={{ display: 'block', margin: '0 auto' }}>
+        {/* Curled tail / shell backdrop */}
+        <path d="M 20 50 C 20 25, 70 25, 70 50 C 70 65, 20 65, 20 50 Z" fill="#d8b4fe" stroke="#8b5cf6" strokeWidth="2.5" />
+        <path d="M 30 32 C 40 28, 50 28, 60 32" fill="none" stroke="#f3e8ff" strokeWidth="1.5" />
+        <path d="M 26 40 C 36 36, 46 36, 62 40" fill="none" stroke="#f3e8ff" strokeWidth="1.5" />
+        
+        {/* Grumpy Head pointing right */}
+        <path d="M 62 45 L 80 43 C 83 42, 85 46, 80 49 L 65 52 Z" fill="#f472b6" stroke="#db2777" strokeWidth="1.5" />
+        <path d="M 60 45 L 53 38 C 51 36, 53 35, 55 37 Z" fill="#db2777" />
+        
+        {/* Half-closed sassy eye */}
+        <path d="M 68 44 Q 71 42, 74 44" stroke="#000" strokeWidth="1.5" fill="none" />
+        <circle cx="71.5" cy="46.5" r="1.5" fill="#000" />
+        <circle cx="70" cy="50" r="2.5" fill="#f43f5e" opacity="0.4" /> {/* Blush */}
+        
+        {/* Sassy Crossed Arms */}
+        <path d="M 40 52 Q 52 56, 62 50" fill="none" stroke="#f472b6" strokeWidth="3.5" strokeLinecap="round" />
+        <path d="M 42 49 Q 32 53, 30 49" fill="none" stroke="#f472b6" strokeWidth="3.5" strokeLinecap="round" />
+        
+        {/* Tail up in the air */}
+        <path d="M 20 50 Q 8 40, 12 32" fill="none" stroke="#8b5cf6" strokeWidth="2.5" />
+        
+        {/* Feet */}
+        <rect x="30" y="58" width="8" height="6" rx="2" fill="#f472b6" />
+        <rect x="52" y="58" width="8" height="6" rx="2" fill="#f472b6" />
+      </svg>
+    );
+  }
+  
+  if (pose === 'sipping') {
+    return (
+      <svg viewBox="0 0 100 100" width="100" height="100" style={{ display: 'block', margin: '0 auto' }}>
+        {/* Shell */}
+        <path d="M 25 50 C 25 25, 75 25, 75 50 C 75 65, 25 65, 25 50 Z" fill="#d8b4fe" stroke="#8b5cf6" strokeWidth="2.5" />
+        <path d="M 35 32 C 45 28, 55 28, 65 32" fill="none" stroke="#f3e8ff" strokeWidth="1.5" />
+        
+        {/* Head tilted down to straw */}
+        <path d="M 64 48 L 78 54 C 80 55, 78 58, 74 57 L 65 52 Z" fill="#f472b6" stroke="#db2777" strokeWidth="1.5" />
+        <circle cx="70" cy="51" r="2" fill="#000" />
+        <circle cx="69" cy="51" r="0.6" fill="#fff" />
+        
+        {/* Straw and Bottle */}
+        <line x1="75" y1="56" x2="80" y2="67" stroke="#10b981" strokeWidth="2.5" />
+        <rect x="76" y="67" width="10" height="17" rx="1.5" fill="#78350f" stroke="#451a03" strokeWidth="1" />
+        <rect x="79" y="64" width="4" height="3" fill="#171717" />
+        <rect x="77" y="71" width="8" height="9" fill="#fef08a" opacity="0.9" /> {/* Yellow label */}
+        
+        {/* Drinking Bubbles/Slurp text */}
+        <circle cx="88" cy="48" r="1.5" fill="#06b6d4" opacity="0.6" />
+        <circle cx="92" cy="40" r="2.5" fill="#06b6d4" opacity="0.4" />
+        <text x="89" y="60" fontSize="4.5" fill="#06b6d4" fontWeight="800" fontFamily="sans-serif">slurp</text>
+        
+        {/* Puffed Cheek */}
+        <ellipse cx="67" cy="52" rx="4.5" ry="3.8" fill="#f472b6" />
+        
+        {/* Arm holding straw */}
+        <path d="M 45 54 Q 65 62, 75 64" fill="none" stroke="#f472b6" strokeWidth="3" strokeLinecap="round" />
+        
+        {/* Tail */}
+        <path d="M 25 52 Q 12 50, 16 58" fill="none" stroke="#8b5cf6" strokeWidth="2" />
+        
+        {/* Feet */}
+        <rect x="35" y="58" width="8" height="6" rx="2" fill="#f472b6" />
+        <rect x="57" y="58" width="8" height="6" rx="2" fill="#f472b6" />
+      </svg>
+    );
+  }
+  
+  if (pose === 'rolled') {
+    return (
+      <svg viewBox="0 0 100 100" width="100" height="100" style={{ display: 'block', margin: '0 auto' }}>
+        {/* Segmented curled shell ball */}
+        <circle cx="50" cy="50" r="30" fill="#d8b4fe" stroke="#8b5cf6" strokeWidth="3" />
+        <circle cx="50" cy="50" r="24" fill="none" stroke="#f3e8ff" strokeWidth="2.5" strokeDasharray="14,6" />
+        <circle cx="50" cy="50" r="18" fill="none" stroke="#f3e8ff" strokeWidth="2" strokeDasharray="8,4" />
+        <path d="M 50 20 Q 20 40, 50 80" fill="none" stroke="#8b5cf6" strokeWidth="2" />
+        <path d="M 50 20 Q 80 40, 50 80" fill="none" stroke="#8b5cf6" strokeWidth="2" />
+        
+        {/* Snoozing Zzz */}
+        <text x="76" y="32" fontSize="9" fill="#c084fc" fontWeight="bold" fontFamily="sans-serif" opacity="0.8">Z</text>
+        <text x="83" y="24" fontSize="6.5" fill="#c084fc" fontFamily="sans-serif" opacity="0.6">z</text>
+        <text x="88" y="18" fontSize="4.5" fill="#c084fc" fontFamily="sans-serif" opacity="0.4">z</text>
+      </svg>
+    );
+  }
+
+  // Default: 'welcome'
+  return (
+    <svg viewBox="0 0 100 100" width="100" height="100" style={{ display: 'block', margin: '0 auto' }}>
+      {/* Shell */}
+      <path d="M 25 50 C 25 25, 75 25, 75 50 C 75 65, 25 65, 25 50 Z" fill="#d8b4fe" stroke="#8b5cf6" strokeWidth="2.5" />
+      <path d="M 35 32 C 45 28, 55 28, 65 32" fill="none" stroke="#f3e8ff" strokeWidth="1.5" />
+      <path d="M 30 40 C 45 35, 55 35, 70 40" fill="none" stroke="#f3e8ff" strokeWidth="1.5" />
+      
+      {/* Friendly Head */}
+      <path d="M 68 45 L 82 48 C 85 49, 85 53, 80 55 L 70 54 Z" fill="#f472b6" stroke="#db2777" strokeWidth="1.5" />
+      <path d="M 69 45 L 72 35 C 73 33, 75 33, 75 36 Z" fill="#db2777" />
+      <path d="M 66 46 L 68 37 C 69 35, 71 35, 71 38 Z" fill="#db2777" />
+      
+      {/* Happy eye */}
+      <circle cx="74.5" cy="48.5" r="2.2" fill="#000" />
+      <circle cx="75.5" cy="47.5" r="0.7" fill="#fff" />
+      <circle cx="72" cy="51" r="2.5" fill="#f43f5e" opacity="0.5" /> {/* Blush */}
+      
+      {/* Arms welcoming */}
+      <path d="M 45 54 Q 60 62, 70 60" fill="none" stroke="#f472b6" strokeWidth="3.2" strokeLinecap="round" />
+      <path d="M 35 54 Q 20 62, 10 60" fill="none" stroke="#f472b6" strokeWidth="3.2" strokeLinecap="round" />
+      
+      {/* Tail */}
+      <path d="M 25 52 Q 10 50, 14 58" fill="none" stroke="#8b5cf6" strokeWidth="2" />
+      
+      {/* Feet */}
+      <rect x="35" y="58" width="8" height="6" rx="2" fill="#f472b6" />
+      <rect x="57" y="58" width="8" height="6" rx="2" fill="#f472b6" />
     </svg>
   );
 }
@@ -263,15 +385,16 @@ function App() {
   const [stickyHandsMode, setStickyHandsMode] = useState(false);
   const [liveTime, setLiveTime] = useState(new Date());
 
-  // Mascot Panel & Chat
+  // Mascot Panel & Chat (Kimmy)
   const [cravingInput, setCravingInput] = useState('');
   const [isRecommending, setIsRecommending] = useState(false);
   const [recommendedProduct, setRecommendedProduct] = useState(null);
-  const [butchChatInput, setButchChatInput] = useState('');
-  const [butchChatLog, setButchChatLog] = useState([
-    { sender: 'butch', text: "Mueller Market Booth #12 is hot today. Make it quick or get out of line." }
+  const [kimmyPose, setKimmyPose] = useState('welcome');
+  const [kimmyChatInput, setKimmyChatInput] = useState('');
+  const [kimmyChatLog, setKimmyChatLog] = useState([
+    { sender: 'kimmy', text: "Hey! I'm Kimmy. Skip the lines and buy some cold booch. What's on your mind?" }
   ]);
-  const [isButchThinking, setIsButchThinking] = useState(false);
+  const [isKimmyThinking, setIsKimmyThinking] = useState(false);
 
   // Optical Code Scanner State
   const [scanCodeText, setScanCodeText] = useState('');
@@ -500,7 +623,7 @@ function App() {
       },
       {
         id: 'merch-hat',
-        name: "Texas Butch Trucker Hat",
+        name: "Texas Kimmy Trucker Hat",
         desc: "Structured mesh-back hat with custom embroidered armadillo seal.",
         price: "$20.00",
         rawPrice: 20.00,
@@ -515,7 +638,7 @@ function App() {
       {
         id: 'merch-sticker',
         name: "Market Sticker Pack",
-        desc: "Sticker collage pack featuring Butch, Sad Cactus, and tap logos.",
+        desc: "Sticker collage pack featuring Kimmy, Sad Cactus, and tap logos.",
         price: "$3.00",
         rawPrice: 3.00,
         color: "emerald",
@@ -699,19 +822,19 @@ function App() {
     }
   };
 
-  // Armadillo chatbot logic
-  const handleButchChat = async (e) => {
+  // Armadillo chatbot logic (Kimmy)
+  const handleKimmyChat = async (e) => {
     e.preventDefault();
-    if (!butchChatInput.trim()) return;
+    if (!kimmyChatInput.trim()) return;
 
-    const userText = butchChatInput;
-    setButchChatLog(prev => [...prev, { sender: 'user', text: userText }]);
-    setButchChatInput('');
-    setIsButchThinking(true);
+    const userText = kimmyChatInput;
+    setKimmyChatLog(prev => [...prev, { sender: 'user', text: userText }]);
+    setKimmyChatInput('');
+    setIsKimmyThinking(true);
 
     try {
-      const armadilloReply = await ApiService.askArmadilloAI(userText);
-      setButchChatLog(prev => [...prev, { sender: 'butch', text: armadilloReply }]);
+      const armadilloReply = await ApiService.askKimmyAI(userText);
+      setKimmyChatLog(prev => [...prev, { sender: 'kimmy', text: armadilloReply }]);
     } catch (err) {
       // Local fallback sassy armadillo chat generator
       setTimeout(() => {
@@ -724,10 +847,25 @@ function App() {
           "Is this a joke? Grab a Lone Star Blackout and go sit on the curb."
         ];
         const randomReply = responses[Math.floor(Math.random() * responses.length)];
-        setButchChatLog(prev => [...prev, { sender: 'butch', text: randomReply }]);
+        setKimmyChatLog(prev => [...prev, { sender: 'kimmy', text: randomReply }]);
       }, 700);
     } finally {
-      setIsButchThinking(false);
+      setIsKimmyThinking(false);
+    }
+  };
+
+  // Get active quote based on Kimmy's pose
+  const getKimmyPoseQuote = () => {
+    switch (kimmyPose) {
+      case 'sassy':
+        return "Yeah, my shell is purple, my eyeliner is smudge-proof, and no, you can't have a discount. Buy or keep moving!";
+      case 'sipping':
+        return "*sluuuuurp* Ah, this Sad Cactus batch is extra crisp today. The aloe really smooths out my attitude. 10/10.";
+      case 'rolled':
+        return "*armadillo snoring* ...zzzz... keep your sticky fingers off my fermentation tanks... zzz... Booth #12... zzz...";
+      case 'welcome':
+      default:
+        return "Hey there! Welcome to Mueller Farmers Market. I'm Kimmy. Skip the check-out lines and order some cold booch!";
     }
   };
 
@@ -950,7 +1088,7 @@ function App() {
                 </tr>
                 <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
                   <td style={{ padding: '8px 4px', fontFamily: 'var(--font-mono)' }}>VITE_OPENAI_API_KEY</td>
-                  <td style={{ padding: '8px 4px', color: 'var(--text-secondary)' }}>Sassy Butch Mascot Intelligence</td>
+                  <td style={{ padding: '8px 4px', color: 'var(--text-secondary)' }}>Sassy Kimmy Mascot Intelligence</td>
                   <td style={{ padding: '8px 4px', textAlign: 'right' }}>
                     <span className={`api-badge ${API_KEYS.OPENAI_API_KEY ? 'active' : ''}`}>{API_KEYS.OPENAI_API_KEY ? 'ACTIVE' : 'MISSING'}</span>
                   </td>
@@ -1022,82 +1160,8 @@ function App() {
         {activeTab === 'menu' && (
           <div className="animate-fade">
             
-            {/* Mascot Banner Quote */}
-            <div className="card" style={{ marginBottom: '1.25rem', background: 'rgba(30, 41, 59, 0.3)', display: 'flex', gap: '1rem', alignItems: 'center' }}>
-              <img 
-                src="/logo.png" 
-                alt="Texas Butch Mascot" 
-                style={{ width: '50px', height: '50px', borderRadius: '50%', border: '2px solid var(--accent-cyan)', flexShrink: 0 }}
-              />
-              <div style={{ flex: 1 }}>
-                <div style={{
-                  fontSize: '0.78rem',
-                  fontStyle: 'italic',
-                  color: 'var(--accent-cyan)',
-                  background: '#090d16',
-                  padding: '6px 12px',
-                  borderRadius: '8px',
-                  border: '1px solid var(--border)'
-                }}>
-                  "Skip the line at Mueller Sunday Market Booth #12. Add fresh tap cups or takehome glass bottles below."
-                </div>
-              </div>
-            </div>
-
-            {/* AI craving search box */}
-            <div className="card" style={{ marginBottom: '1.25rem', border: '1px dashed var(--accent-violet)', background: 'rgba(139, 92, 246, 0.03)' }}>
-              <h4 style={{ fontSize: '0.85rem', color: 'var(--accent-violet)', marginBottom: '0.5rem' }}>
-                <i className="fa-solid fa-wand-magic-sparkles" /> Ask Butch: Craving Recommender
-              </h4>
-              <div style={{ display: 'flex', gap: '8px' }}>
-                <input 
-                  type="text" 
-                  className="input" 
-                  value={cravingInput}
-                  onChange={(e) => setCravingInput(e.target.value)}
-                  placeholder="e.g. I want something sweet and fruity"
-                  style={{
-                    flex: 1,
-                    background: '#040712',
-                    border: '1px solid var(--border)',
-                    borderRadius: '20px',
-                    padding: '8px 14px',
-                    fontSize: '0.8rem',
-                    color: '#fff',
-                    outline: 'none'
-                  }}
-                  onKeyDown={(e) => e.key === 'Enter' && runAISorting()}
-                />
-                <button className="btn btn-primary btn-sm" onClick={runAISorting} disabled={isRecommending}>
-                  {isRecommending ? <i className="fa-solid fa-spinner fa-spin" /> : "Recommend"}
-                </button>
-              </div>
-
-              {recommendedProduct && (
-                <div className="animate-fade" style={{
-                  marginTop: '10px',
-                  padding: '8px 12px',
-                  background: 'rgba(6, 182, 212, 0.08)',
-                  borderRadius: '10px',
-                  border: '1.5px solid var(--accent-cyan)',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center'
-                }}>
-                  <div style={{ minWidth: 0, flex: 1, marginRight: '8px' }}>
-                    <span style={{ fontSize: '0.62rem', fontWeight: '800', background: 'var(--accent-cyan)', color: '#000', padding: '1px 5px', borderRadius: '4px', display: 'inline-block', marginBottom: '2px' }}>BUTCH'S BEST MATCH</span>
-                    <h5 style={{ fontSize: '0.82rem', color: '#fff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{recommendedProduct.name}</h5>
-                  </div>
-                  
-                  <button className="btn btn-sm btn-primary" onClick={() => { addToCart(recommendedProduct.id); setRecommendedProduct(null); setCravingInput(''); }}>
-                    <i className="fa-solid fa-plus" /> Quick Add (${recommendedProduct.rawPrice.toFixed(2)})
-                  </button>
-                </div>
-              )}
-            </div>
-
-            {/* Filters Bar */}
-            <div className="category-filter">
+            {/* Filters Bar - FIRST thing customer sees */}
+            <div className="category-filter" style={{ marginTop: '0.2rem' }}>
               {[
                 { id: 'all', label: 'All Tap Menu' },
                 { id: 'cups', label: 'Cups (Tap)' },
@@ -1184,6 +1248,7 @@ function App() {
                               <p style={{ marginTop: '2px', color: '#fff' }}>{product.tastingNotes || "Standard refreshingly crisp kombucha finish."}</p>
                             </div>
                             <div>
+                              <circle cx="0" cy="0" r="0" />
                               <strong style={{ color: 'var(--accent-violet)', fontSize: '0.68rem' }}>ORGANIC INGREDIENTS:</strong>
                               <p style={{ marginTop: '2px', color: 'var(--text-secondary)' }}>{product.ingredients || "Organic Kombucha Culture, Filtered Spring Water, Natural Organic Extracts."}</p>
                             </div>
@@ -1195,6 +1260,57 @@ function App() {
                   </div>
                 );
               })}
+            </div>
+
+            {/* Separator and Kimmy's Corner at the bottom as an afterthought */}
+            <hr style={{ border: 'none', borderTop: '1px solid var(--border)', margin: '2.5rem 0 1.5rem' }} />
+            
+            <div className="card animate-fade" style={{ borderLeft: '4px solid var(--accent-violet)', background: 'rgba(25, 15, 45, 0.4)' }}>
+              <div style={{ display: 'flex', gap: '1.25rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                <div style={{ width: '80px', height: '80px', flexShrink: 0 }}>
+                  <KimmySVG pose={kimmyPose} />
+                </div>
+                <div style={{ flex: 1, minWidth: '200px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                    <span style={{ fontSize: '0.65rem', fontWeight: '800', color: 'var(--accent-violet)', letterSpacing: '0.05em' }}>KIMMY THE ARMADILLO</span>
+                    <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>Mascot Pose Controller</span>
+                  </div>
+                  
+                  <div style={{ 
+                    background: '#090d16', 
+                    border: '1px solid var(--border)', 
+                    borderRadius: '8px', 
+                    padding: '8px 12px', 
+                    fontSize: '0.78rem', 
+                    color: '#fff', 
+                    fontStyle: 'italic',
+                    marginBottom: '10px',
+                    minHeight: '44px',
+                    display: 'flex',
+                    alignItems: 'center'
+                  }}>
+                    "{getKimmyPoseQuote()}"
+                  </div>
+
+                  <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                    {[
+                      { id: 'welcome', label: 'Welcome 🌸' },
+                      { id: 'sassy', label: 'Sassy 💅' },
+                      { id: 'sipping', label: 'Sipping 🥤' },
+                      { id: 'rolled', label: 'Sleepy 😴' }
+                    ].map(p => (
+                      <button 
+                        key={p.id} 
+                        className={`btn btn-sm ${kimmyPose === p.id ? 'btn-primary' : 'btn-ghost'}`}
+                        style={{ padding: '3px 8px', fontSize: '0.65rem', borderRadius: '15px' }}
+                        onClick={() => setKimmyPose(p.id)}
+                      >
+                        {p.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </div>
 
           </div>
@@ -1255,7 +1371,7 @@ function App() {
                               disabled={authStatus === 'verifying'}
                             />
                             <button type="submit" className="btn btn-sm btn-primary" disabled={authStatus === 'verifying'}>
-                              {authStatus === 'verifying' ? "Verifying..." : "Verify Code"}
+                              {authStatus === 'verifying' ? "Verify Code" : "Verify Code"}
                             </button>
                           </form>
                         )}
@@ -1537,35 +1653,55 @@ function App() {
           </div>
         )}
 
-        {/* ── Tab View 4: Texas Butch Mascot ─────────────── */}
+        {/* ── Tab View 4: Kimmy Mascot ─────────────── */}
         {activeTab === 'armadillo' && (
           <div className="animate-fade" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
             
             {/* Mascot advice */}
             <div className="card" style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
               <div className="mascot-avatar">
-                <img 
-                  src="/logo.png" 
-                  alt="Texas Butch" 
-                  style={{ width: '70px', height: '70px', borderRadius: '50%' }} 
-                />
+                <KimmySVG pose={kimmyPose} />
               </div>
 
               <div className="chat-bubble">
-                <div style={{ fontSize: '0.62rem', fontWeight: '800', color: 'var(--accent-violet)', letterSpacing: '0.05em', marginBottom: '2px' }}>BUTCH THE ARMADILLO</div>
+                <div style={{ fontSize: '0.62rem', fontWeight: '800', color: 'var(--accent-violet)', letterSpacing: '0.05em', marginBottom: '2px' }}>KIMMY THE ARMADILLO</div>
                 <p style={{ fontSize: '0.82rem', color: '#fff', lineHeight: '1.4' }}>
-                  {butchChatLog[butchChatLog.length - 1].sender === 'butch' 
-                    ? butchChatLog[butchChatLog.length - 1].text 
+                  {kimmyChatLog[kimmyChatLog.length - 1].sender === 'kimmy' 
+                    ? kimmyChatLog[kimmyChatLog.length - 1].text 
                     : "Grunt... I'm thinking..."}
                 </p>
               </div>
             </div>
 
+            {/* Poses selector in tab view */}
+            <div className="card">
+              <h4 style={{ fontSize: '0.85rem', color: '#fff', marginBottom: '0.5rem' }}>Kimmy's Dynamic Poses</h4>
+              <p style={{ fontSize: '0.72rem', color: 'var(--text-secondary)', marginBottom: '0.75rem' }}>
+                Toggle Kimmy's active pose to see her expressions and get custom quotes.
+              </p>
+              <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                {[
+                  { id: 'welcome', label: 'Welcome 🌸' },
+                  { id: 'sassy', label: 'Sassy 💅' },
+                  { id: 'sipping', label: 'Sipping 🥤' },
+                  { id: 'rolled', label: 'Sleepy 😴' }
+                ].map(p => (
+                  <button 
+                    key={p.id} 
+                    className={`btn btn-sm ${kimmyPose === p.id ? 'btn-primary' : 'btn-ghost'}`}
+                    onClick={() => setKimmyPose(p.id)}
+                  >
+                    {p.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             {/* Chatbot conversation list */}
             <div className="card">
-              <h4 style={{ fontSize: '0.85rem', color: '#fff', marginBottom: '0.5rem' }}>Ask Butch Anything</h4>
+              <h4 style={{ fontSize: '0.85rem', color: '#fff', marginBottom: '0.5rem' }}>Ask Kimmy Anything</h4>
               <p style={{ fontSize: '0.72rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
-                Ask him about ingredients, fermentation, or how to reach Booth #12. Keep it short, he gets grumpy!
+                Ask her about ingredients, fermentation, or how to reach Booth #12. Keep it short, she gets grumpy!
               </p>
 
               <div style={{
@@ -1581,7 +1717,7 @@ function App() {
                 marginBottom: '1rem',
                 scrollbarWidth: 'none'
               }}>
-                {butchChatLog.map((chat, idx) => (
+                {kimmyChatLog.map((chat, idx) => (
                   <div key={idx} style={{
                     alignSelf: chat.sender === 'user' ? 'flex-end' : 'flex-start',
                     background: chat.sender === 'user' ? 'rgba(6,182,212,0.1)' : 'rgba(255,255,255,0.03)',
@@ -1595,19 +1731,19 @@ function App() {
                     {chat.text}
                   </div>
                 ))}
-                {isButchThinking && (
+                {isKimmyThinking && (
                   <div style={{ alignSelf: 'flex-start', background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', padding: '6px 12px', borderRadius: '8px', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                    <i className="fa-solid fa-spinner fa-spin" /> Butch is grunting...
+                    <i className="fa-solid fa-spinner fa-spin" /> Kimmy is grunting...
                   </div>
                 )}
               </div>
 
-              <form onSubmit={handleButchChat} style={{ display: 'flex', gap: '8px' }}>
+              <form onSubmit={handleKimmyChat} style={{ display: 'flex', gap: '8px' }}>
                 <input 
                   type="text" 
-                  value={butchChatInput}
-                  onChange={(e) => setButchChatInput(e.target.value)}
-                  placeholder="Ask Butch (e.g. Do you have gluten free?)"
+                  value={kimmyChatInput}
+                  onChange={(e) => setKimmyChatInput(e.target.value)}
+                  placeholder="Ask Kimmy (e.g. Do you have gluten free?)"
                   style={{
                     flex: 1,
                     background: '#040712',
@@ -1619,7 +1755,7 @@ function App() {
                     outline: 'none'
                   }}
                 />
-                <button type="submit" className="btn btn-sm btn-accent" disabled={isButchThinking}>
+                <button type="submit" className="btn btn-sm btn-accent" disabled={isKimmyThinking}>
                   Ask
                 </button>
               </form>
@@ -1627,7 +1763,7 @@ function App() {
 
             {/* Sassy recommendations */}
             <div className="card">
-              <h4 style={{ fontSize: '0.85rem', color: '#fff', marginBottom: '0.5rem' }}>Butch's Top Tap Recommendations</h4>
+              <h4 style={{ fontSize: '0.85rem', color: '#fff', marginBottom: '0.5rem' }}>Kimmy's Top Tap Recommendations</h4>
               <p style={{ fontSize: '0.72rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
                 These are flyin' off the keg taps today. Order one now.
               </p>
@@ -1698,7 +1834,7 @@ function App() {
           onClick={() => setActiveTab('armadillo')}
         >
           <i className="fa-solid fa-shield-halved" />
-          <span>Texas Butch</span>
+          <span>Kimmy</span>
         </button>
       </nav>
 

@@ -109,7 +109,7 @@ export const ApiService = {
       }, 800)
     })
   },
-  async askArmadilloAI(promptText) {
+  async askKimmyAI(promptText) {
     const key = API_KEYS.OPENAI_API_KEY
     if (!key) {
       throw new Error("Missing OpenAI API Key. Please add VITE_OPENAI_API_KEY to your .env file.")
@@ -122,7 +122,7 @@ export const ApiService = {
         messages: [
           {
             role: 'system',
-            content: 'You are a sassy, protective Texas Armadillo mascot with a "Weird Texas Emo Butch" attitude at the Mueller Sunday Market. Keep it short, blunt, and slightly grumpy. Remind people to keep their sticky fingers clean.'
+            content: 'You are Kimmy, a sassy, protective female Texas Armadillo mascot for Kim\'s Boochery at the Mueller Sunday Market. Keep it short, blunt, and slightly grumpy. Remind people to keep their sticky fingers clean.'
           },
           {
             role: 'user',
