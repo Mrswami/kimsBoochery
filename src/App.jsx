@@ -1249,31 +1249,53 @@ function App() {
               </div>
             </div>
 
-            {/* Smartphone pairing QA QR Code */}
+            {/* Smartphone pairing QA QR Codes */}
             <div className="card" style={{ textAlign: 'center' }}>
               <h4 style={{ fontSize: '0.9rem', color: '#fff', marginBottom: '0.4rem' }}>
-                <i className="fa-solid fa-mobile-screen-button" /> Test Customer Mode on Personal Phone
+                <i className="fa-solid fa-mobile-screen-button" /> Test & Pair Kiosk Devices
               </h4>
-              <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
-                Scan this QR code to load the exact mobile customer storefront on your iPhone or Galaxy device.
+              <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '1.25rem' }}>
+                Scan these QR codes to launch the main webapp or load the dedicated customer payment view.
               </p>
 
-              <div style={{
-                background: '#fff',
-                padding: '12px',
-                borderRadius: '12px',
-                display: 'inline-block',
-                border: '3px solid var(--accent-violet)',
-                boxShadow: '0 8px 24px rgba(139, 92, 246, 0.15)'
-              }}>
-                <img
-                  src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&color=0f172a&bgcolor=ffffff&data=${encodeURIComponent(window.location.origin + '?role=customer')}`}
-                  alt="QA Test QR Link"
-                  style={{ width: '130px', height: '130px', display: 'block' }}
-                />
-              </div>
-              <div style={{ marginTop: '0.6rem', fontSize: '0.65rem', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>
-                {window.location.origin + '?role=customer'}
+              <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', flexWrap: 'wrap' }}>
+                {/* Webapp Link QR */}
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+                  <div style={{
+                    background: '#fff',
+                    padding: '12px',
+                    borderRadius: '12px',
+                    border: '3px solid var(--accent-cyan)',
+                    boxShadow: '0 8px 24px rgba(6, 182, 212, 0.15)'
+                  }}>
+                    <img
+                      src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&color=0f172a&bgcolor=ffffff&data=${encodeURIComponent('https://kimboocherly.web.app/')}`}
+                      alt="Webapp Launch QR"
+                      style={{ width: '130px', height: '130px', display: 'block' }}
+                    />
+                  </div>
+                  <span style={{ fontSize: '0.7rem', color: '#fff', fontWeight: '800' }}>1. Main Webapp Launch</span>
+                  <span style={{ fontSize: '0.6rem', color: 'var(--text-muted)' }}>https://kimboocherly.web.app/</span>
+                </div>
+
+                {/* Customer Role QR */}
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+                  <div style={{
+                    background: '#fff',
+                    padding: '12px',
+                    borderRadius: '12px',
+                    border: '3px solid var(--accent-violet)',
+                    boxShadow: '0 8px 24px rgba(139, 92, 246, 0.15)'
+                  }}>
+                    <img
+                      src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&color=0f172a&bgcolor=ffffff&data=${encodeURIComponent('https://kimboocherly.web.app/?role=customer')}`}
+                      alt="Customer Pay QR"
+                      style={{ width: '130px', height: '130px', display: 'block' }}
+                    />
+                  </div>
+                  <span style={{ fontSize: '0.7rem', color: '#fff', fontWeight: '800' }}>2. Customer Payment View</span>
+                  <span style={{ fontSize: '0.6rem', color: 'var(--text-muted)' }}>https://kimboocherly.web.app/?role=customer</span>
+                </div>
               </div>
             </div>
           </div>
