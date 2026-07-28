@@ -58,36 +58,6 @@ const baseFlavors = [
     abv: "0.5% ABV",
     inventory: 14,
     code: "SAD01"
-  },
-  {
-    id: "hill-country",
-    name: "Hill Country Lavender",
-    desc: "Texas lavender, wild blueberry, & lemon balm. Soothing & floral.",
-    price: "$5.25",
-    rawPrice: 5.25,
-    color: "emerald",
-    ingredients: "Organic Kombucha Culture, Culinary Lavender Buds, Hill Country Blueberries, Lemon Balm Tea, Spring Water.",
-    tastingNotes: "Aromatic floral aroma with a subtle berry sweetness and soothing herbal finish.",
-    stars: 4.9,
-    reviews: 37,
-    abv: "0.4% ABV",
-    inventory: 15,
-    code: "LAV05"
-  },
-  {
-    id: "lone-star",
-    name: "Lone Star Blackout",
-    desc: "Blackberry, charcoal, & oak. Dark & bold.",
-    price: "$5.50",
-    rawPrice: 5.50,
-    color: "violet",
-    ingredients: "Organic Kombucha Culture, Wild Blackberries, Activated Charcoal (Coconut Source), Sweet Oak Wood Infusion, Filtered Spring Water.",
-    tastingNotes: "Rich, tannic, blackberry-forward with a smoky, earthy mouthfeel. Deep obsidian color.",
-    stars: 4.9,
-    reviews: 58,
-    abv: "1.2% ABV",
-    inventory: 9,
-    code: "LONE02"
   }
 ];
 
@@ -150,6 +120,9 @@ function AmberBottleSVG({ flavorColor = 'cyan', flavorName = 'Booch' }) {
 
       {/* Main Glass Body */}
       <path d="M 35 50 C 35 75, 20 80, 20 100 L 20 190 C 20 205, 80 205, 80 190 L 80 100 C 80 80, 65 75, 65 50 Z" fill="#5c3412" stroke="#2c1707" strokeWidth="2.5" />
+
+      {/* Kombucha Liquid Fill */}
+      <path d="M 36 60 C 36 78, 22 83, 22 100 L 22 188 C 22 198, 78 198, 78 188 L 78 100 C 78 83, 64 78, 64 60 Z" fill={getHexColor(flavorColor)} opacity="0.45" />
 
       {/* Glass Highlight */}
       <path d="M 23 105 L 23 185 C 23 194, 27 197, 30 197 C 26 194, 26 105, 33 92 C 36 86, 45 81, 48 56 C 48 56, 37 76, 23 105" fill="rgba(255,255,255,0.15)" />
@@ -739,51 +712,7 @@ function App() {
       });
     });
 
-    // Add Merch items
-    catalog.push(
-      {
-        id: 'merch-tee',
-        name: "Kim's Boochery Classic Tee",
-        desc: "Vintage wash heavy cotton tee. Soft screen-printed mascot seal in Austin.",
-        price: "$25.00",
-        rawPrice: 25.00,
-        color: "violet",
-        category: 'merch',
-        stars: 5.0,
-        reviews: 14,
-        code: "TEE01",
-        ingredients: "100% Organic Texas Cotton. Dyed with natural indigo extracts.",
-        tastingNotes: "Extremely breathable. Heavy boxy fit styling."
-      },
-      {
-        id: 'merch-hat',
-        name: "Texas Kimmy Trucker Hat",
-        desc: "Structured mesh-back hat with custom embroidered armadillo seal.",
-        price: "$20.00",
-        rawPrice: 20.00,
-        color: "amber",
-        category: 'merch',
-        stars: 4.8,
-        reviews: 21,
-        code: "HAT02",
-        ingredients: "Polyester mesh back, organic cotton front panels.",
-        tastingNotes: "Adjustable snapback closure. Sassy shade generator."
-      },
-      {
-        id: 'merch-sticker',
-        name: "Market Sticker Pack",
-        desc: "Sticker collage pack featuring Kimmy, Sad Cactus, and tap logos.",
-        price: "$3.00",
-        rawPrice: 3.00,
-        color: "emerald",
-        category: 'merch',
-        stars: 4.9,
-        reviews: 45,
-        code: "STK03",
-        ingredients: "UV-protected waterproof gloss vinyl stickers.",
-        tastingNotes: "Stick on coolers, laptops, or car bumpers."
-      }
-    );
+
 
     return catalog;
   };
@@ -1469,8 +1398,7 @@ function App() {
                 { id: 'all', label: 'All Tap Menu' },
                 { id: 'cups', label: 'Cups (Tap)' },
                 { id: 'bottles', label: 'Amber Bottles' },
-                { id: 'can4', label: 'Can 4-Packs' },
-                { id: 'merch', label: 'Merchandise' }
+                { id: 'can4', label: 'Can 4-Packs' }
               ].map(cat => (
                 <button
                   key={cat.id}
