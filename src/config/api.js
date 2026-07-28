@@ -5,6 +5,8 @@
 // ══════════════════════════════════════════════════════════════
 
 import axios from 'axios'
+import { httpsCallable } from 'firebase/functions'
+import { functions } from './firebase'
 
 // ── API Keys (loaded from environment variables) ────────────────
 export const API_KEYS = {
@@ -96,18 +98,10 @@ export const ApiService = {
   async getMetrics(range = '7d') {
     return apiClient.get(`${API_ENDPOINTS.ANALYTICS.METRICS}?range=${range}`)
   },
-  async createPaymentIntent(amount, currency = 'usd') {
-    console.log(`[Stripe Simulation] Creating payment intent for ${amount} ${currency.toUpperCase()}`)
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({
-          clientSecret: `pi_mock_secret_${Math.random().toString(36).substring(2)}`,
-          status: 'succeeded',
-          amount,
-          currency
-        })
-      }, 800)
-    })
+  async createStripeCheckoutSession(items, successUrl, cancelUrl) {
+    const createSession = httpsCallable(functions, 'createStripeCheckoutSession')
+    const response = await createSession({ items, successUrl, cancelUrl })
+    return response.data
   },
   async askKimmyAI(promptText) {
     const key = API_KEYS.OPENAI_API_KEY

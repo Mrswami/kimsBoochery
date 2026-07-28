@@ -853,33 +853,18 @@ function App() {
     }
   };
 
-  const handleCheckout = () => {
+  const handleCheckout = async () => {
     if (totalCartCount() === 0) return;
-    setIsProcessingPayment(true);
-    setOrderStatus('processing');
-
-    const steps = [
-      "Contacting secure Stripe processing gateway...",
-      `Authorizing transaction via ${paymentMode.toUpperCase()} token...`,
-      "Verifying inventory levels at Mueller Booth #12...",
-      "Generating digital line-skipping pickup pass..."
-    ];
-
-    let currentStep = 0;
-    setPaymentStatusText(steps[0]);
-
-    const timer = setInterval(() => {
-      currentStep++;
-      if (currentStep < steps.length) {
-        setPaymentStatusText(steps[currentStep]);
-      } else {
-        clearInterval(timer);
+    
+    if (paymentMode === 'cash') {
+      setIsProcessingPayment(true);
+      setOrderStatus('processing');
+      setPaymentStatusText("Logging cash order at Booth #12...");
+      setTimeout(() => {
         setIsProcessingPayment(false);
         const orderId = `KB-${Math.floor(100000 + Math.random() * 900000)}`;
         const totalVal = getCartTotal().toFixed(2);
-        
-        logInvoiceToFirestore(orderId, cart, totalVal);
-
+        logInvoiceToFirestore(orderId, cart, totalVal, 'cash', 'Cash Customer');
         setOrderPassDetails({
           id: orderId,
           total: totalVal,
@@ -888,8 +873,46 @@ function App() {
           phone: currentUser ? currentUser.phoneNumber : 'Guest Customer'
         });
         setOrderStatus('ready');
+      }, 1500);
+      return;
+    }
+
+    setIsProcessingPayment(true);
+    setOrderStatus('processing');
+    setPaymentStatusText("Initiating secure Stripe payment session...");
+
+    try {
+      const createSession = httpsCallable(functions, 'createStripeCheckoutSession');
+      const cartQuery = Object.entries(cart).map(([id, qty]) => `${id}:${qty}`).join(',');
+      const orderId = `KB-${Math.floor(100000 + Math.random() * 900000)}`;
+      const totalVal = getCartTotal().toFixed(2);
+
+      const response = await createSession({
+        items: Object.entries(cart).map(([itemId, qty]) => {
+          const product = catalog.find(p => p.id === itemId);
+          return {
+            name: product ? product.name : itemId,
+            price: product ? product.rawPrice : 0,
+            quantity: qty
+          };
+        }),
+        successUrl: `${window.location.protocol}//${window.location.host}${window.location.pathname}?checkout_status=success&order_id=${orderId}&payment_mode=${paymentMode}&cart=${cartQuery}`,
+        cancelUrl: window.location.href
+      });
+
+      if (response.data && response.data.url) {
+        window.location.href = response.data.url;
+      } else {
+        alert("Failed to initiate Stripe Checkout Session.");
+        setIsProcessingPayment(false);
+        setOrderStatus(null);
       }
-    }, 1000);
+    } catch (err) {
+      console.error("Stripe Checkout Error:", err);
+      alert(`Stripe Error: ${err.message || err}`);
+      setIsProcessingPayment(false);
+      setOrderStatus(null);
+    }
   };
 
   const handleMerchantCheckout = async (method) => {
@@ -2177,13 +2200,6 @@ function App() {
           <span>Flavor Scan</span>
         </button>
 
-        <button
-          className={`bottom-tab ${activeTab === 'armadillo' ? 'active' : ''}`}
-          onClick={() => setActiveTab('armadillo')}
-        >
-          <i className="fa-solid fa-shield-halved" />
-          <span>Kimmy</span>
-        </button>
       </nav>
 
       {/* Footer */}

@@ -3,7 +3,7 @@
     "source": "functions"
   },
   "hosting": {
-    "site": "kimboocherly",
+    "site": "kimboocherly-app",
     "public": "dist",
     "ignore": [
       "firebase.json",
