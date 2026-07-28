@@ -451,6 +451,7 @@ function App() {
   const [paymentStatusText, setPaymentStatusText] = useState('');
   const [orderStatus, setOrderStatus] = useState(null); // null | 'processing' | 'ordered' | 'preparing' | 'ready'
   const [orderPassDetails, setOrderPassDetails] = useState(null);
+  const [logoTapCount, setLogoTapCount] = useState(0);
 
   // Active product category filter: 'all' | 'cups' | 'bottles' | 'can4' | 'merch'
   const [categoryFilter, setCategoryFilter] = useState('all');
@@ -491,22 +492,8 @@ function App() {
 
   // Load URL Role & Cart & Stripe Redirect on Mount
   useEffect(() => {
+    setRole('customer');
     const params = new URLSearchParams(window.location.search);
-    const urlRole = params.get('role');
-    if (urlRole === 'vendor') {
-      const code = prompt("Enter Admin Access Code to view Vendor panel:");
-      if (code === '1200') {
-        setRole('vendor');
-      } else {
-        alert("Access Denied.");
-        setRole('customer');
-        const url = new URL(window.location);
-        url.searchParams.delete('role');
-        window.history.replaceState({}, '', url);
-      }
-    } else {
-      setRole('customer');
-    }
 
     const checkoutStatus = params.get('checkout_status');
     const redirectOrderId = params.get('order_id');
@@ -1171,6 +1158,35 @@ function App() {
     window.history.pushState({}, '', url);
   };
 
+  const handleLogoClick = () => {
+    const nextCount = logoTapCount + 1;
+    if (nextCount >= 5) {
+      setLogoTapCount(0);
+      if (role === 'vendor') {
+        setRole('customer');
+        const url = new URL(window.location);
+        url.searchParams.delete('role');
+        window.history.pushState({}, '', url);
+      } else {
+        const code = prompt("Enter Admin Access Code to view Vendor panel:");
+        if (code === '1200') {
+          setRole('vendor');
+          const url = new URL(window.location);
+          url.searchParams.set('role', 'vendor');
+          window.history.pushState({}, '', url);
+        } else {
+          alert("Access Denied.");
+        }
+      }
+    } else {
+      setLogoTapCount(nextCount);
+      // Reset taps count after 2.5 seconds
+      setTimeout(() => {
+        setLogoTapCount(0);
+      }, 2500);
+    }
+  };
+
   // Filtered Catalog for Shop
   const filteredCatalog = catalog.filter(p => {
     if (categoryFilter === 'all') return true;
@@ -1184,7 +1200,7 @@ function App() {
 
       {/* ── Titlebar Header ──────────────────────────── */}
       <header className="titlebar">
-        <div className="titlebar-logo" onClick={() => handleRoleChange(role === 'customer' ? 'vendor' : 'customer')}>
+        <div className="titlebar-logo" onClick={handleLogoClick}>
           <img
             src="/logo.png"
             alt="Kim's Boochery Logo"
@@ -1204,14 +1220,7 @@ function App() {
             </div>
           )}
 
-          {/* Active Role toggle indicator */}
-          <div
-            className={`role-badge ${role === 'vendor' ? 'vendor' : ''}`}
-            onClick={() => setShowRoleModal(true)}
-          >
-            <i className={`fa-solid ${role === 'vendor' ? 'fa-user-gear' : 'fa-user-astronaut'}`} />
-            {role === 'vendor' ? 'Vendor Mode' : 'Customer View'}
-          </div>
+
 
           <button
             className={`btn btn-sm btn-ghost`}
@@ -1495,59 +1504,28 @@ function App() {
                         <h4 className="product-title">{product.name}</h4>
                       </div>
 
-                      {/* Ratings stars */}
-                      <div className="stars-row">
-                        <span>
-                          {Array.from({ length: 5 }).map((_, i) => (
-                            <i key={i} className={`fa-solid fa-star`} style={{ opacity: i < Math.floor(product.stars) ? 1 : 0.2 }} />
-                          ))}
-                        </span>
-                        <span className="star-rating-val">{product.stars} ({product.reviews})</span>
-                        {product.abv && <span style={{ color: 'var(--text-muted)', marginLeft: '8px' }}>• {product.abv}</span>}
-                      </div>
-
-                      <p className="flavor-desc">{product.desc}</p>
+                      <p className="flavor-desc" style={{ fontSize: '0.9rem', lineHeight: '1.4', margin: '0.5rem 0 1rem' }}>{product.desc}</p>
 
                       <div className="price-row">
                         <div>
-                          <span className="price-text">{product.price}</span>
-                          <span className="price-unit"> / {product.category === 'cups' ? 'cup' : product.category === 'bottles' ? 'bottle' : product.category === 'can4' ? 'pack' : 'item'}</span>
+                          <span className="price-text" style={{ fontSize: '1.3rem', fontWeight: '800' }}>{product.price}</span>
+                          <span className="price-unit" style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}> / {product.category === 'cups' ? 'cup' : product.category === 'bottles' ? 'bottle' : product.category === 'can4' ? 'pack' : 'item'}</span>
+                          {product.abv && <span style={{ color: 'var(--accent-cyan)', fontSize: '0.75rem', fontWeight: 'bold', marginLeft: '8px' }}>({product.abv})</span>}
                         </div>
 
                         <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                           {cartQty > 0 ? (
-                            <div className="counter-box">
-                              <button className="counter-btn" onClick={() => removeFromCart(product.id)}>-</button>
-                              <span className="counter-val">{cartQty}</span>
-                              <button className="counter-btn" onClick={() => addToCart(product.id)}>+</button>
+                            <div className="counter-box" style={{ padding: '4px 8px' }}>
+                              <button className="counter-btn" style={{ fontSize: '1.1rem', width: '28px', height: '28px' }} onClick={() => removeFromCart(product.id)}>-</button>
+                              <span className="counter-val" style={{ fontSize: '1.1rem', margin: '0 8px' }}>{cartQty}</span>
+                              <button className="counter-btn" style={{ fontSize: '1.1rem', width: '28px', height: '28px' }} onClick={() => addToCart(product.id)}>+</button>
                             </div>
                           ) : (
-                            <button className="btn btn-sm btn-primary" onClick={() => addToCart(product.id)}>
-                              <i className="fa-solid fa-plus" /> Quick Add
+                            <button className="btn btn-primary" style={{ padding: '8px 16px', borderRadius: '25px', fontSize: '0.9rem' }} onClick={() => addToCart(product.id)}>
+                              <i className="fa-solid fa-plus" style={{ marginRight: '4px' }} /> Add to Cart
                             </button>
                           )}
                         </div>
-                      </div>
-
-                      {/* Expandable tasting notes */}
-                      <div className="flavor-expander">
-                        <div className="expander-header" onClick={() => toggleNotes(product.id)}>
-                          <span>Tasting notes & ingredients</span>
-                          <i className={`fa-solid ${expandedNotes[product.id] ? 'fa-chevron-up' : 'fa-chevron-down'}`} />
-                        </div>
-                        {expandedNotes[product.id] && (
-                          <div className="expander-content animate-fade">
-                            <div style={{ marginBottom: '4px' }}>
-                              <strong style={{ color: 'var(--accent-cyan)', fontSize: '0.68rem' }}>TASTING NOTES:</strong>
-                              <p style={{ marginTop: '2px', color: '#fff' }}>{product.tastingNotes || "Standard refreshingly crisp kombucha finish."}</p>
-                            </div>
-                            <div>
-                              <circle cx="0" cy="0" r="0" />
-                              <strong style={{ color: 'var(--accent-violet)', fontSize: '0.68rem' }}>ORGANIC INGREDIENTS:</strong>
-                              <p style={{ marginTop: '2px', color: 'var(--text-secondary)' }}>{product.ingredients || "Organic Kombucha Culture, Filtered Spring Water, Natural Organic Extracts."}</p>
-                            </div>
-                          </div>
-                        )}
                       </div>
 
                     </div>
