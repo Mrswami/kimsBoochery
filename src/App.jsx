@@ -494,7 +494,16 @@ function App() {
     const params = new URLSearchParams(window.location.search);
     const urlRole = params.get('role');
     if (urlRole === 'vendor') {
-      setRole('vendor');
+      const code = prompt("Enter Admin Access Code to view Vendor panel:");
+      if (code === '1200') {
+        setRole('vendor');
+      } else {
+        alert("Access Denied.");
+        setRole('customer');
+        const url = new URL(window.location);
+        url.searchParams.delete('role');
+        window.history.replaceState({}, '', url);
+      }
     } else {
       setRole('customer');
     }
@@ -1141,6 +1150,14 @@ function App() {
 
   // Toggle role via query URL or badge helper
   const handleRoleChange = (targetRole) => {
+    if (targetRole === 'vendor') {
+      const code = prompt("Enter Admin Access Code to view Vendor panel:");
+      if (code !== '1200') {
+        alert("Invalid Access Code. Access Denied.");
+        return;
+      }
+    }
+    
     setRole(targetRole);
     setShowRoleModal(false);
 
